@@ -39,6 +39,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
     private final List<ExtensionTableData> tableData;
     private final List<ExtensionStatisticsData> statisticsData;
+    private final List<ExtensionFlagsData> flagsData;
     private final List<String> graphNames;
     private final List<ExtensionDescription> descriptions;
 
@@ -60,6 +61,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         graphNames = new ArrayList<>();
         descriptions = new ArrayList<>();
         statisticsData = new ArrayList<>();
+        flagsData = new ArrayList<>();
     }
 
     public TabInformation getTabInformation() {
@@ -106,6 +108,10 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return statisticsData;
     }
 
+    public List<ExtensionFlagsData> getFlagsData() {
+        return flagsData;
+    }
+
     /**
      * Get all descriptions for data in this tab.
      * <p>
@@ -146,6 +152,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         this.graphNames.addAll(other.graphNames);
         this.tableData.addAll(other.tableData);
         this.statisticsData.addAll(other.statisticsData);
+        this.flagsData.addAll(other.flagsData);
 
         createOrderingList();
     }
@@ -227,6 +234,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
             return this;
         }
 
+        public Builder putFlagsData(ExtensionFlagsData flagsData) {
+            data.flagsData.add(flagsData);
+            return this;
+        }
+
         public Builder putGraphName(String graphName) {
             data.graphNames.add(graphName);
             return this;
@@ -235,6 +247,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         public ExtensionTabData build() {
             data.createOrderingList();
             Collections.sort(data.tableData);
+            Collections.sort(data.flagsData);
             return data;
         }
     }

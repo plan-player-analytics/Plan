@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.intellij.lang.annotations.Language;
@@ -206,21 +207,5 @@ public class ExtensionGraphMetadataTable {
         return SELECT + "x" + FROM + getTableName(pluginName, providerName) +
                 WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID +
                 (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "");
-    }
-
-    public enum TableType {
-        SERVER(0),
-        PLAYER(1),
-        GROUP(2);
-
-        private final int type;
-
-        TableType(int type) {
-            this.type = type;
-        }
-
-        public int getType() {
-            return type;
-        }
     }
 }

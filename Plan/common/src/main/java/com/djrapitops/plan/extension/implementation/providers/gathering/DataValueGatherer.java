@@ -37,12 +37,14 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
+import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -131,6 +133,7 @@ public class DataValueGatherer {
         addToBuilder(b, String[].class, this::tryToBuildGroups, methods.getGroupProviders(), parameters);
         addToBuilder(b, Table.class, this::tryToBuildTable, methods.getTableProviders(), parameters);
         addToBuilder(b, Statistics.class, this::tryToBuildStatistics, methods.getStatisticsProviders(), parameters);
+        addToBuilder(b, Flags.class, this::tryToBuildFlags, methods.getFlagsProviders(), parameters);
 
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
@@ -174,6 +177,21 @@ public class DataValueGatherer {
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
                     .icon(Icon.called(annotation.iconName()).of(annotation.iconFamily()).build())
                     .buildStatistics(() -> callMethod(provider, parameters, Statistics.class), annotation.tableColor());
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
+        }
+    }
+
+    private DataValue<Flags> tryToBuildFlags(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        FlagsProvider annotation = provider.getExistingAnnotation(FlagsProvider.class);
+        try {
+            return dataBuilder.valueBuilder(annotation.text())
+                    .methodName(provider)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .icon(Icon.called(annotation.iconName()).of(annotation.iconFamily()).build())
+                    .buildFlags(() -> callMethod(provider, parameters, Flags.class), annotation.tableColor());
         } catch (IllegalArgumentException e) {
             logFailure(e, getPluginName(), provider.getMethodName());
             return null;
@@ -385,6 +403,8 @@ public class DataValueGatherer {
                         storePlayerTable(parameters, conditions, data));
                 valueFromPair(pair, Statistics.class, StatisticsDataValue.class).ifPresent(data ->
                         storePlayerStatistics(parameters, conditions, data));
+                valueFromPair(pair, Flags.class, FlagsDataValue.class).ifPresent(data ->
+                        storeFlags(parameters, conditions, data));
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
@@ -411,6 +431,8 @@ public class DataValueGatherer {
                         storeTable(parameters, conditions, data));
                 valueFromPair(pair, Statistics.class, StatisticsDataValue.class).ifPresent(data ->
                         storeStatistics(parameters, conditions, data));
+                valueFromPair(pair, Flags.class, FlagsDataValue.class).ifPresent(data ->
+                        storeFlags(parameters, conditions, data));
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (RejectedExecutionException ignore) {
@@ -517,6 +539,17 @@ public class DataValueGatherer {
         Database db = dbSystem.getDatabase();
         extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerStatisticsResultTransaction(information, parameters, value));
+    }
+
+    private void storeFlags(Parameters parameters, Conditions conditions, FlagsDataValue data) {
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
+        if (value == null) return;
+
+        Database db = dbSystem.getDatabase();
+        extensionMetadataStorage.storeProvider(information, parameters);
+        TableType tableType = TableType.forParameterType(data.getParameterType());
+        db.executeTransaction(new StoreFlagsResultTransaction(information, parameters, value, tableType));
     }
 
     private void storePlayerBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {

@@ -28,7 +28,7 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
 import javax.inject.Inject;
@@ -110,7 +110,7 @@ public class PlayerPageExporter extends FileExporter {
                 datapointType + DatapointType.WORLD_PIE.name() + player
         );
 
-        for (var graphsOfServer : dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableNamesByServerUUID(ExtensionGraphMetadataTable.TableType.PLAYER)).entrySet()) {
+        for (var graphsOfServer : dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableNamesByServerUUID(TableType.PLAYER)).entrySet()) {
             ServerUUID serverUUID = graphsOfServer.getKey();
             for (String graphTableName : graphsOfServer.getValue()) {
                 exportJSON(toDirectory, "extensionGraph?graph=" + graphTableName + "&server=" + serverUUID + player);

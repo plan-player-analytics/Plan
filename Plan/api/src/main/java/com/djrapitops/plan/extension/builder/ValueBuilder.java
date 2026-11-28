@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
@@ -250,6 +251,15 @@ public interface ValueBuilder {
     DataValue<Statistics> buildStatistics(Statistics statistics, Color tableColor);
 
     /**
+     * Build named Boolean flags.
+     *
+     * @param flags Flags built using {@link Flags#create()}
+     * @param tableColor Color of the flags table
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Flags> buildFlags(Flags flags, Color tableColor);
+
+    /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      * <p>
      * {@link ValueBuilder#buildBoolean(boolean)}
@@ -318,6 +328,15 @@ public interface ValueBuilder {
      * {@link ValueBuilder#buildStatistics(Statistics, Color)}
      */
     DataValue<Statistics> buildStatistics(Supplier<Statistics> statistics, Color tableColor);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     *
+     * @param flags Flags built using {@link Flags#create()}
+     * @param tableColor Color of the flags table
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Flags> buildFlags(Supplier<Flags> flags, Color tableColor);
 
     /**
      * Implementation detail - for abstracting annotations with the builder API.

@@ -68,6 +68,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 
         for (Integer providerId : providerIds) {
             removeStatistics(providerId);
+            removeFlags(providerId);
             removeValues(providerId);
         }
         Collection<Integer> tableProviderIds = query(inactiveTableProviderIDsQuery());
@@ -86,6 +87,14 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         execute(DELETE_FROM + ExtensionStatisticServerValueTable.TABLE_NAME + WHERE + ExtensionStatisticServerValueTable.STATISTIC_ID + " IN ("
                 + SELECT + ExtensionStatisticTable.ID + FROM + ExtensionStatisticTable.TABLE_NAME + WHERE + ExtensionStatisticTable.PROVIDER_ID + "=" + providerId +
                 ")");
+    }
+
+    private void removeFlags(Integer providerId) {
+        execute(DELETE_FROM + ExtensionFlagPlayerValueTable.TABLE_NAME + WHERE + ExtensionFlagPlayerValueTable.FLAG_ID + " IN ("
+                + SELECT + ExtensionFlagTable.ID + FROM + ExtensionFlagTable.TABLE_NAME + WHERE + ExtensionFlagTable.PROVIDER_ID + "=" + providerId + ")");
+        execute(DELETE_FROM + ExtensionFlagServerValueTable.TABLE_NAME + WHERE + ExtensionFlagServerValueTable.FLAG_ID + " IN ("
+                + SELECT + ExtensionFlagTable.ID + FROM + ExtensionFlagTable.TABLE_NAME + WHERE + ExtensionFlagTable.PROVIDER_ID + "=" + providerId + ")");
+        execute(DELETE_FROM + ExtensionFlagTable.TABLE_NAME + WHERE + ExtensionFlagTable.PROVIDER_ID + "=" + providerId);
     }
 
     private List<ExtensionMetadataKey> getInvalidatedProviders(Collection<Integer> providerIds, Collection<Integer> tableProviderIds) {

@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -70,7 +71,7 @@ public class ExtensionGraphQueries {
         return db -> db.queryList(sql, row -> row.getString(1), serverUUID);
     }
 
-    public static Query<List<String>> findGraphTableNames(ExtensionGraphMetadataTable.TableType type) {
+    public static Query<List<String>> findGraphTableNames(TableType type) {
         @Language("SQL")
         String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME +
@@ -78,7 +79,7 @@ public class ExtensionGraphQueries {
         return db -> db.queryList(sql, row -> row.getString(1), type.getType());
     }
 
-    public static Query<List<String>> findGraphTableNames(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType type) {
+    public static Query<List<String>> findGraphTableNames(ServerUUID serverUUID, TableType type) {
         @Language("SQL")
         String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME + " g" +
@@ -89,7 +90,7 @@ public class ExtensionGraphQueries {
         return db -> db.queryList(sql, row -> row.getString(1), type.getType(), serverUUID);
     }
 
-    public static Query<Map<ServerUUID, List<String>>> findGraphTableNamesByServerUUID(ExtensionGraphMetadataTable.TableType type) {
+    public static Query<Map<ServerUUID, List<String>>> findGraphTableNamesByServerUUID(TableType type) {
         @Language("SQL")
         String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME + ',' + ExtensionPluginTable.SERVER_UUID +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME + " g" +
@@ -110,7 +111,7 @@ public class ExtensionGraphQueries {
         return db -> db.queryList(sql, row -> row.getString(1), providerIds);
     }
 
-    public static Query<Optional<ExtensionGraphDto>> getGraphMetadata(String graphTableName, ExtensionGraphMetadataTable.TableType tableType, ServerUUID serverUUID) {
+    public static Query<Optional<ExtensionGraphDto>> getGraphMetadata(String graphTableName, TableType tableType, ServerUUID serverUUID) {
         String sql = SELECT + "*" +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME + " m " +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p ON p.id=m." + ExtensionGraphMetadataTable.PROVIDER_ID +
@@ -237,7 +238,7 @@ public class ExtensionGraphQueries {
         return Arrays.asList(items);
     }
 
-    public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNameTabs(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType tableType) {
+    public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNameTabs(ServerUUID serverUUID, TableType tableType) {
         String sql = SELECT +
                 "p." + ExtensionProviderTable.PLUGIN_ID + ',' +
                 "t." + ExtensionTabTable.TAB_NAME + " as tab_name," +
@@ -269,7 +270,7 @@ public class ExtensionGraphQueries {
         };
     }
 
-    public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNames(UUID playerUUID, ExtensionGraphMetadataTable.TableType tableType) {
+    public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNames(UUID playerUUID, TableType tableType) {
         String sql = SELECT +
                 "p." + ExtensionProviderTable.PLUGIN_ID + ',' +
                 "t." + ExtensionTabTable.TAB_NAME + " as tab_name," +

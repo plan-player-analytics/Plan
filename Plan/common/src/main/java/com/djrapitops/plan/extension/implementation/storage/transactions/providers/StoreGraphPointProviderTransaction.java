@@ -27,6 +27,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -58,7 +59,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
     private final ServerUUID serverUUID;
     private final GraphProvider annotation;
     private final List<SeriesMetadata> metadata;
-    private final ExtensionGraphMetadataTable.TableType tableType;
+    private final TableType tableType;
 
     public StoreGraphPointProviderTransaction(
             GraphProvider annotation,
@@ -66,7 +67,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
             ProviderInformation info,
             ServerUUID serverUUID,
             List<SeriesMetadata> metadata,
-            ExtensionGraphMetadataTable.TableType tableType
+            TableType tableType
     ) {
         this.annotation = annotation;
         this.method = method;

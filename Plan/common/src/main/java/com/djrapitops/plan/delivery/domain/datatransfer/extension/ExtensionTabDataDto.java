@@ -30,6 +30,7 @@ public record ExtensionTabDataDto(
         List<ExtensionValueDataDto> values,
         List<ExtensionTableDataDto> tableData,
         List<ExtensionStatisticsDataDto> statisticsData,
+        List<ExtensionFlagsDataDto> flagsData,
         List<String> graphNames
 ) {
 
@@ -39,6 +40,7 @@ public record ExtensionTabDataDto(
                 constructValues(extensionTabData.getValueOrder(), extensionTabData),
                 extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).toList(),
                 extensionTabData.getStatisticsData().stream().map(ExtensionStatisticsDataDto::new).toList(),
+                extensionTabData.getFlagsData().stream().map(ExtensionFlagsDataDto::new).toList(),
                 extensionTabData.getGraphNames()
         );
     }

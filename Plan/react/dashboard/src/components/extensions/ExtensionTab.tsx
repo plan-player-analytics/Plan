@@ -12,6 +12,7 @@ import { ExtensionGraphs } from './ExtensionGraphs';
 import { Row } from 'react-bootstrap';
 import { randomUuid } from '../../util/uuid';
 import { ExtensionStatistics } from './ExtensionStatistics';
+import { ExtensionFlags } from './ExtensionFlags';
 
 type Props = {
     tab: DataType;
@@ -77,7 +78,14 @@ export const ExtensionTab = ({ tab, widths }: Props) => {
                             />
                         );
                     case 'FLAGS':
-                        return null;
+                        return (
+                            <ExtensionFlags
+                                key={type}
+                                uuid={uuid}
+                                tab={tab}
+                                width={widths?.FLAGS || 12}
+                            />
+                        );
                     case 'VALUES':
                         return (
                             <ExtensionValues

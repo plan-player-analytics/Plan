@@ -20,6 +20,7 @@ import com.djrapitops.plan.extension.graph.DataPoint;
 import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.ExpandGraphColumnCountTransaction;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -55,7 +56,7 @@ public class StoreServerGraphPoints extends Transaction {
     protected void performOperations() {
         executeOther(new ExpandGraphColumnCountTransaction(identifier, maxColumnCount));
 
-        String selectXValues = ExtensionGraphMetadataTable.selectXValuesSql(identifier.getPluginName(), identifier.getProviderName(), ExtensionGraphMetadataTable.TableType.SERVER)
+        String selectXValues = ExtensionGraphMetadataTable.selectXValuesSql(identifier.getPluginName(), identifier.getProviderName(), TableType.SERVER)
                 + lockForUpdate();
         List<Long> existingX = query(db -> db.queryList(selectXValues, row -> row.getLong("x"), identifier.getServerUUID()));
 
@@ -81,7 +82,7 @@ public class StoreServerGraphPoints extends Transaction {
     private void replace(List<DataPoint> replace) {
         if (replace.isEmpty()) return;
         execute(new ExecBatchStatement(ExtensionGraphMetadataTable.updateGraphTableSql(identifier.getPluginName(), identifier.getProviderName(), maxColumnCount,
-                ExtensionGraphMetadataTable.TableType.SERVER)) {
+                TableType.SERVER)) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(maxColumnCount + 1, getServerUUID().toString());
@@ -105,7 +106,7 @@ public class StoreServerGraphPoints extends Transaction {
     private void append(List<DataPoint> append) {
         if (append.isEmpty()) return;
         execute(new ExecBatchStatement(ExtensionGraphMetadataTable.insertToGraphTableSql(identifier.getPluginName(), identifier.getProviderName(), maxColumnCount,
-                ExtensionGraphMetadataTable.TableType.SERVER)) {
+                TableType.SERVER)) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getServerUUID().toString());

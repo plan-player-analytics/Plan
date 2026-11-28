@@ -30,7 +30,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
@@ -298,7 +298,7 @@ public class ServerPageExporter extends FileExporter {
         exportDatapointJSON(toDirectory, DatapointType.DISK_MIN, serverUUID);
         exportDatapointJSON(toDirectory, DatapointType.TPS_AVERAGE, serverUUID);
 
-        for (String graphTableName : dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableNames(ExtensionGraphMetadataTable.TableType.SERVER))) {
+        for (String graphTableName : dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableNames(TableType.SERVER))) {
             exportJSON(toDirectory, "extensionGraph?graph=" + graphTableName + "&server=" + serverUUID);
         }
     }

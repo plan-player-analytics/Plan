@@ -30,6 +30,7 @@ import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
@@ -51,6 +52,7 @@ public class ExtValueBuilder implements ValueBuilder {
     private FormatType formatType = FormatType.NONE;
     private Conditional conditional;
     private Aggregates[] aggregates;
+    private ExtensionMethod.ParameterType parameterType = ExtensionMethod.ParameterType.SERVER_NONE;
 
     public ExtValueBuilder(String text, DataExtension extension) {
         this.text = text;
@@ -64,6 +66,7 @@ public class ExtValueBuilder implements ValueBuilder {
     @Override
     public ValueBuilder methodName(ExtensionMethod method) {
         this.providerName = method.getMethod().getName();
+        this.parameterType = method.getParameterType();
         return this;
     }
 
@@ -202,6 +205,19 @@ public class ExtValueBuilder implements ValueBuilder {
                 .build();
     }
 
+    public ProviderInformation getFlagsProviderInformation(Color tableColor) {
+        return ProviderInformation.builder(pluginName)
+                .setText(text)
+                .setName(providerName != null ? providerName
+                        : formatTextAsIdentifier(text))
+                .setPriority(0)
+                .setCondition(conditional)
+                .setTab(tabName)
+                .setIcon(icon.setColor(tableColor))
+                .setTableColor(tableColor)
+                .build();
+    }
+
     @Override
     public DataValue<Boolean> buildBoolean(boolean value) {
         return new BooleanDataValue(value, getProviderInformation());
@@ -300,5 +316,15 @@ public class ExtValueBuilder implements ValueBuilder {
     @Override
     public DataValue<Statistics> buildStatistics(Supplier<Statistics> statistics, Color tableColor) {
         return new StatisticsDataValue(statistics, getStatisticsProviderInformation(tableColor));
+    }
+
+    @Override
+    public DataValue<Flags> buildFlags(Flags flags, Color tableColor) {
+        return new FlagsDataValue(flags, getFlagsProviderInformation(tableColor), parameterType);
+    }
+
+    @Override
+    public DataValue<Flags> buildFlags(Supplier<Flags> flags, Color tableColor) {
+        return new FlagsDataValue(flags, getFlagsProviderInformation(tableColor), parameterType);
     }
 }

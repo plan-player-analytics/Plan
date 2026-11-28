@@ -27,11 +27,11 @@ import net.playeranalytics.extension.askyblock.ASkyBlockExtensionFactory;
 import net.playeranalytics.extension.authme.AuthMeExtensionFactory;
 import net.playeranalytics.extension.banmanager.BanManagerExtensionFactory;
 import net.playeranalytics.extension.bentobox.BentoBoxExtensionFactory;
+import net.playeranalytics.extension.cmi.CMIExtensionFactory;
 import net.playeranalytics.extension.discordsrv.DiscordSRVExtensionFactory;
 import net.playeranalytics.extension.dkbans.DKBansExtensionFactory;
 import net.playeranalytics.extension.dkcoins.DKCoinsExtensionFactory;
 import net.playeranalytics.extension.essentials.EssentialsExtensionFactory;
-import net.playeranalytics.extension.cmi.CMIExtensionFactory;
 import net.playeranalytics.extension.factions.FactionsExtensionFactory;
 import net.playeranalytics.extension.factionsuuid.FactionsUUIDExtensionFactory;
 import net.playeranalytics.extension.fastlogin.FastLoginExtensionFactory;
@@ -147,6 +147,10 @@ public class ExtensionRegister {
         register(new TownyExtensionFactory(), TownyExtensionFactory::createExtension);
         registerMany(new VaultExtensionFactory(), VaultExtensionFactory::createExtensions);
         register(new ViaVersionExtensionFactory(), ViaVersionExtensionFactory::createExtension, ViaVersionExtensionFactory::registerListener);
+
+        if (isExtensionEnabledInConfig.test("ExamplePlugin")) {
+            register(new ExampleExtension());
+        }
 
         if (registerException != null) throw registerException;
     }

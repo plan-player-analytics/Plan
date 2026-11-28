@@ -27,6 +27,7 @@ import com.djrapitops.plan.extension.graph.*;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
@@ -164,6 +165,30 @@ public class TestExtensions {
         public Statistics tabStats(UUID playerUUID) {
             return Statistics.create()
                     .put("custom_stat", 999L);
+        }
+    }
+
+    @PluginInfo(name = "FlagsExtension")
+    public static class FlagsExtension implements DataExtension {
+        public Flags serverFlags = Flags.create()
+                .put("shared_flag", true)
+                .put("server_false", false)
+                .put("server_missing", null)
+                .put("server_omitted", true);
+        public Flags playerFlags = Flags.create()
+                .put("shared_flag", false)
+                .put("player_false", false)
+                .put("player_missing", null)
+                .put("player_omitted", true);
+
+        @FlagsProvider(text = "Server Flags", tableColor = Color.GREEN)
+        public Flags serverFlags() {
+            return serverFlags;
+        }
+
+        @FlagsProvider(text = "Player Flags", tableColor = Color.BLUE)
+        public Flags playerFlags(UUID playerUUID) {
+            return playerFlags;
         }
     }
 

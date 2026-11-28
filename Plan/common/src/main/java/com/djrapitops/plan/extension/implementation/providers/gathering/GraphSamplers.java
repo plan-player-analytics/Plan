@@ -38,7 +38,7 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerGraphPoints;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.utilities.java.ThrowingSupplier;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -126,7 +126,7 @@ public class GraphSamplers {
                         extension,
                         provider,
                         seriesMetadata,
-                        ExtensionGraphMetadataTable.TableType.PLAYER
+                        TableType.PLAYER
                 );
                 playerGraphSources.add(new GraphSource<>(extension, provider, playerGraphDataSource,
                         new AtomicInteger(seriesMetadata != null ? seriesMetadata.size() : 1),
@@ -134,7 +134,7 @@ public class GraphSamplers {
                                 extension,
                                 provider,
                                 playerGraphDataSource.getSeriesMetadata(),
-                                ExtensionGraphMetadataTable.TableType.PLAYER
+                                TableType.PLAYER
                         )));
             } catch (DataExtensionMethodCallException e) {
                 errorLogger.warn(e, ErrorContext.builder()
@@ -159,7 +159,7 @@ public class GraphSamplers {
                         extension,
                         provider,
                         seriesMetadata,
-                        ExtensionGraphMetadataTable.TableType.SERVER
+                        TableType.SERVER
                 );
                 var graphSource = new GraphSource<>(extension, provider, serverGraphDataSource,
                         new AtomicInteger(seriesMetadata != null ? seriesMetadata.size() : 1),
@@ -167,7 +167,7 @@ public class GraphSamplers {
                                 extension,
                                 provider,
                                 serverGraphDataSource.getSeriesMetadata(),
-                                ExtensionGraphMetadataTable.TableType.SERVER
+                                TableType.SERVER
                         ));
                 serverGraphSources.add(graphSource);
                 ServerGraphSampler sampler = new ServerGraphSampler(
@@ -190,7 +190,7 @@ public class GraphSamplers {
         }
     }
 
-    private void storeGraphMetadata(ExtensionWrapper extension, ExtensionMethod provider, @Nullable List<SeriesMetadata> seriesMetadata, ExtensionGraphMetadataTable.TableType tableType) {
+    private void storeGraphMetadata(ExtensionWrapper extension, ExtensionMethod provider, @Nullable List<SeriesMetadata> seriesMetadata, TableType tableType) {
         GraphProvider annotation = provider.getExistingAnnotation(GraphProvider.class);
         ValueBuilder valueBuilder = extension.getExtension().valueBuilder(annotation.displayName())
                 .showOnTab(provider.getAnnotationOrNull(Tab.class))

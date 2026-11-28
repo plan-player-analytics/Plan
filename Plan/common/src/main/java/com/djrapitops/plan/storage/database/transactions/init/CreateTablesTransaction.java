@@ -78,7 +78,10 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
                 ExtensionGraphAggregateTypeTable.ToProviderTable.TABLE_NAME,
                 ExtensionStatisticTable.TABLE_NAME,
                 ExtensionStatisticPlayerValueTable.TABLE_NAME,
-                ExtensionStatisticServerValueTable.TABLE_NAME
+                ExtensionStatisticServerValueTable.TABLE_NAME,
+                ExtensionFlagTable.TABLE_NAME,
+                ExtensionFlagPlayerValueTable.TABLE_NAME,
+                ExtensionFlagServerValueTable.TABLE_NAME
         };
     }
 
@@ -141,5 +144,8 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(ExtensionStatisticTable.createTableSQL(dbType));
         execute(ExtensionStatisticPlayerValueTable.createTableSQL(dbType));
         execute(ExtensionStatisticServerValueTable.createTableSQL(dbType));
+        execute(ExtensionFlagTable.createTableSQL(dbType));
+        execute(ExtensionFlagPlayerValueTable.createTableSQL(dbType));
+        execute(ExtensionFlagServerValueTable.createTableSQL(dbType));
     }
 }

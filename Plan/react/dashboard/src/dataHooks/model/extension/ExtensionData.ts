@@ -91,11 +91,25 @@ export type ExtensionStatistics = {
     valueByKey: { [key: string]: number | null };
 };
 
+export type ExtensionFlagsData = {
+    providerName: string;
+    providerText: string;
+    flags: ExtensionFlags;
+    tableColor: string;
+    icon: ExtensionIcon;
+    tableColorClass: string;
+};
+
+export type ExtensionFlags = {
+    valueByKey: { [key: string]: boolean | null };
+};
+
 export type ExtensionTab = {
     tabInformation: ExtensionTabInformation;
     values: ExtensionValue[];
     tableData: ExtensionTableData[];
     statisticsData: ExtensionStatisticsData[];
+    flagsData: ExtensionFlagsData[];
     graphNames: string[];
 };
 

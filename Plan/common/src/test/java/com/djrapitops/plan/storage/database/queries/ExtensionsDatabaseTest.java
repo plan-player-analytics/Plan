@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionStatisticsDataDto;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.icon.Color;
@@ -533,6 +534,9 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ExtensionStatisticsData statData1 = defaultStatsData.get(0);
         assertEquals("stats", statData1.getProviderName());
         assertEquals(Color.GREEN, statData1.getTableColor());
+        ExtensionStatisticsDataDto statisticsDto = new ExtensionStatisticsDataDto(statData1);
+        assertEquals("GREEN", statisticsDto.tableColor());
+        assertEquals(Color.GREEN, statData1.getTableColor());
         assertEquals(Map.of("stat_one", 42L, "group:stat_two", 100L), statData1.getStatistics().getValueByKey());
 
         ExtensionTabData customTab = tabs.stream()
@@ -583,6 +587,9 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(1, defaultStatsData.size());
         ExtensionStatisticsData statData1 = defaultStatsData.get(0);
         assertEquals("stats", statData1.getProviderName());
+        assertEquals(Color.GREEN, statData1.getTableColor());
+        ExtensionStatisticsDataDto statisticsDto = new ExtensionStatisticsDataDto(statData1);
+        assertEquals("GREEN", statisticsDto.tableColor());
         assertEquals(Color.GREEN, statData1.getTableColor());
         assertEquals(Map.of("stat_one", 42L, "group:stat_two", 100L), statData1.getStatistics().getValueByKey());
 
