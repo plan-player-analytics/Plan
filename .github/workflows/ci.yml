@@ -98,9 +98,15 @@ jobs:
           done
       - name: 📶 Setup to avoid ERR_NETWORK_CHANGED
         run: |    
-          IFACE=$(sudo ip -o route get 1.1.1.1 | awk '{print $5; exit}')
-          sudo resolvectl dns "$IFACE" 1.1.1.1 1.0.0.1
-          sudo resolvectl domain eth0 "~."
+          IFACE=$(ip -o route get 1.1.1.1 2>/dev/null | awk '{print $5; exit}')
+
+          if [ -n "$IFACE" ]; then
+            echo "Using network interface: $IFACE"
+            sudo resolvectl dns "$IFACE" 1.1.1.1 1.0.0.1
+            sudo resolvectl domain "$IFACE" "~."
+          else
+            echo "No network interface found. Skipping DNS configuration."
+          fi
           sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
           sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
       - name: 🩺 Test 
