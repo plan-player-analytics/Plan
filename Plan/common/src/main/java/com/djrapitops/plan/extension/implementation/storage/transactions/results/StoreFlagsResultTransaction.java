@@ -32,12 +32,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -60,10 +55,8 @@ public class StoreFlagsResultTransaction extends Transaction {
         var serverId = query(ServerQueries.fetchServerId(parameters.getServerUUID()))
                 .orElseThrow(() -> new DBOpException("Server not stored."));
         var providerId = query(ExtensionInformationQueries.findProviderId(
-                        information.getPluginName(), information.getName(), parameters.getServerUUID()))
+                information.getPluginName(), information.getName(), parameters.getServerUUID()))
                 .orElseThrow(() -> new DBOpException("Provider not stored."));
-        execute(UPDATE + ExtensionFlagTable.TABLE_NAME + SET + ExtensionFlagTable.PARAMETER_TYPE + "=?" +
-                WHERE + ExtensionFlagTable.PROVIDER_ID + "=?", tableType.getType(), providerId);
         Map<String, Integer> flagNameToId = storeMissingFlags(providerId, value.getValueByKey().keySet(), tableType);
         Map<Integer, Boolean> valuesById = getValuesById(flagNameToId);
 
