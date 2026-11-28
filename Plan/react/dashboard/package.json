@@ -29,7 +29,7 @@
         "export-to-csv": "1.5.0",
         "highcharts": "13.1.1",
         "i18next": "26.7.1",
-        "i18next-chained-backend": "5.0.8",
+        "i18next-chained-backend": "5.1.1",
         "i18next-http-backend": "4.1.1",
         "i18next-localstorage-backend": "4.3.3",
         "masonry-layout": "4.2.2",
