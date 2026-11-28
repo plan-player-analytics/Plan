@@ -605,12 +605,18 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.DATE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#DATE">DATE</a></code></div>
 <div class="col-last even-row-color"><code>"date"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.DEATH_CAUSE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#DEATH_CAUSE">DEATH_CAUSE</a></code></div>
+<div class="col-last odd-row-color"><code>"death_cause"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.DEATH_CAUSE_COLUMN_LENGTH">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#DEATH_CAUSE_COLUMN_LENGTH">DEATH_CAUSE_COLUMN_LENGTH</a></code></div>
+<div class="col-last even-row-color"><code>30</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#ID">ID</a></code></div>
 <div class="col-last odd-row-color"><code>"id"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last even-row-color"><code>"INSERT INTO plan_kills (session_id,killer_uuid,victim_uuid,server_uuid,date,weapon) VALUES ((SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.user_id=(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1) AND plan_sessions.server_id=(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1) AND session_start=? AND session_end=? LIMIT 1), ?, ?, ?, ?, ?)"</code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_kills (session_id,killer_uuid,victim_uuid,server_uuid,date,weapon,death_cause) VALUES ((SELECT plan_sessions.id FROM plan_sessions WHERE plan_sessions.user_id=(SELECT plan_users.id FROM plan_users WHERE plan_users.uuid=? LIMIT 1) AND plan_sessions.server_id=(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1) AND session_start=? AND session_end=? LIMIT 1), ?, ?, ?, ?, ?, ?)"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.KillsTable.KILLER_UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#KILLER_UUID">KILLER_UUID</a></code></div>
 <div class="col-last odd-row-color"><code>"killer_uuid"</code></div>
@@ -2155,7 +2161,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Value</div>
 <div class="col-first even-row-color"><code id="net.playeranalytics.plan.BuildParameters.VERSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="net/playeranalytics/plan/BuildParameters.html#VERSION">VERSION</a></code></div>
-<div class="col-last even-row-color"><code>"5.9 build 3912"</code></div>
+<div class="col-last even-row-color"><code>"5.9 build 3914"</code></div>
 </div>
 </li>
 </ul>

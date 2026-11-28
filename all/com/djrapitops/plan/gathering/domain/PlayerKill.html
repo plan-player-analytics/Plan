@@ -59,8 +59,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)" tabindex="0">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, String, DeathCause, long, ServerIdentifier)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long)" tabindex="0">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, ServerIdentifier, String, DeathCause, long)</a></li>
 <li><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)" tabindex="0">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, ServerIdentifier, String, long)</a></li>
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)" tabindex="0">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, String, long, ServerIdentifier)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -74,6 +75,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#equals(java.lang.Object)" tabindex="0">equals(Object)</a></li>
 <li><a href="#killer()" tabindex="0">killer()</a></li>
 <li><a href="#victim()" tabindex="0">victim()</a></li>
+<li><a href="#deathCause()" tabindex="0">deathCause()</a></li>
 <li><a href="#date()" tabindex="0">date()</a></li>
 <li><a href="#server()" tabindex="0">server()</a></li>
 </ol>
@@ -97,7 +99,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">PlayerKill</span>(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer, <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon, long&nbsp;date, <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server)
+<div class="type-signature"><span class="modifiers">public record </span><span class="element-name type-name-label">PlayerKill</span>(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer, <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon, <a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a>&nbsp;deathCause, long&nbsp;date, <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server)
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Record.html" title="class or interface in java.lang" class="external-link">Record</a>
 implements <a href="../../delivery/domain/DateHolder.html" title="interface in com.djrapitops.plan.delivery.domain">DateHolder</a></span></div>
 <div class="block">Represents a player vs player kill.</div>
@@ -137,12 +139,20 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
  long&nbsp;date)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)" class="member-name-link">PlayerKill</a><wbr>(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long)" class="member-name-link">PlayerKill</a><wbr>(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
+ <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
+ <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
+ <a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a>&nbsp;deathCause,
+ long&nbsp;date)</code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)" class="member-name-link">PlayerKill</a><wbr>(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
  <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
+ <a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a>&nbsp;deathCause,
  long&nbsp;date,
  <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Creates an instance of a <code>PlayerKill</code> record class.</div>
 </div>
 </div>
@@ -164,48 +174,53 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>date</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#deathCause()" class="member-name-link">deathCause</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the value of the <code>deathCause</code> record component.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>final int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a hash code value for this object.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isNotSelfKill()" class="member-name-link">isNotSelfKill</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSelfKill()" class="member-name-link">isSelfKill</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isNotSelfKill()" class="member-name-link">isNotSelfKill</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#killer()" class="member-name-link">killer</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isSelfKill()" class="member-name-link">isSelfKill</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#killer()" class="member-name-link">killer</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>killer</code> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#server()" class="member-name-link">server</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#server()" class="member-name-link">server</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>server</code> record component.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toJson()" class="member-name-link">toJson</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toJson()" class="member-name-link">toJson</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns a string representation of this record class.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#victim()" class="member-name-link">victim</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#victim()" class="member-name-link">victim</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the value of the <code>victim</code> record component.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weapon()" class="member-name-link">weapon</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#weapon()" class="member-name-link">weapon</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the Weapon used as string.</div>
 </div>
 </div>
@@ -226,24 +241,13 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)">
-<h3>PlayerKill</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerKill</span><wbr><span class="parameters">(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
- <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
- <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
- long&nbsp;date)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)">
 <h3>PlayerKill</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerKill</span><wbr><span class="parameters">(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
  <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
+ <a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a>&nbsp;deathCause,
  long&nbsp;date,
  <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server)</span></div>
 <div class="block">Creates an instance of a <code>PlayerKill</code> record class.</div>
@@ -252,9 +256,35 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
 <dd><code>killer</code> - the value for the <code>killer</code> record component</dd>
 <dd><code>victim</code> - the value for the <code>victim</code> record component</dd>
 <dd><code>weapon</code> - the value for the <code>weapon</code> record component</dd>
+<dd><code>deathCause</code> - the value for the <code>deathCause</code> record component</dd>
 <dd><code>date</code> - the value for the <code>date</code> record component</dd>
 <dd><code>server</code> - the value for the <code>server</code> record component</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long)">
+<h3>PlayerKill</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerKill</span><wbr><span class="parameters">(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
+ <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
+ <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
+ <a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a>&nbsp;deathCause,
+ long&nbsp;date)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)">
+<h3>PlayerKill</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerKill</span><wbr><span class="parameters">(<a href="PlayerKill.Killer.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Killer</a>&nbsp;killer,
+ <a href="PlayerKill.Victim.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill.Victim</a>&nbsp;victim,
+ <a href="../../delivery/domain/ServerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">ServerIdentifier</a>&nbsp;server,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;weapon,
+ long&nbsp;date)</span></div>
 </div>
 </section>
 </li>
@@ -372,6 +402,19 @@ implements <a href="../../delivery/domain/DateHolder.html" title="interface in c
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the value of the <code>victim</code> record component</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deathCause()">
+<h3>deathCause</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></span>&nbsp;<span class="element-name">deathCause</span>()</div>
+<div class="block">Returns the value of the <code>deathCause</code> record component.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the value of the <code>deathCause</code> record component</dd>
 </dl>
 </div>
 </section>

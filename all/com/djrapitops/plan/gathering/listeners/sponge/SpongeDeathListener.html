@@ -67,6 +67,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#onEntityDeath(org.spongepowered.api.event.entity.DestructEntityEvent.Death)" tabindex="0">onEntityDeath(DestructEntityEvent.Death)</a></li>
 <li><a href="#findKiller(java.util.List,org.spongepowered.api.entity.living.Living,int)" tabindex="0">findKiller(List, Living, int)</a></li>
 <li><a href="#findWeapon(org.spongepowered.api.event.entity.DestructEntityEvent.Death,org.spongepowered.api.entity.living.Living)" tabindex="0">findWeapon(DestructEntityEvent.Death, Living)</a></li>
+<li><a href="#findDeathCause(org.spongepowered.api.event.entity.DestructEntityEvent.Death)" tabindex="0">findDeathCause(DestructEntityEvent.Death)</a></li>
 </ol>
 </li>
 </ol>
@@ -116,22 +117,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;org.spongepowered.api.entity.living.player.Player&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findKiller(java.util.List,org.spongepowered.api.entity.living.Living,int)" class="member-name-link">findKiller</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.spongepowered.api.event.cause.entity.damage.source.DamageSource&gt;&nbsp;causes,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findDeathCause(org.spongepowered.api.event.entity.DestructEntityEvent.Death)" class="member-name-link">findDeathCause</a><wbr>(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;death)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;org.spongepowered.api.entity.living.player.Player&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findKiller(java.util.List,org.spongepowered.api.entity.living.Living,int)" class="member-name-link">findKiller</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;org.spongepowered.api.event.cause.entity.damage.source.DamageSource&gt;&nbsp;causes,
  org.spongepowered.api.entity.living.Living&nbsp;dead,
  int&nbsp;depth)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(org.spongepowered.api.event.entity.DestructEntityEvent.Death,org.spongepowered.api.entity.living.Living)" class="member-name-link">findWeapon</a><wbr>(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;death,
- org.spongepowered.api.entity.living.Living&nbsp;dead)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBlockInteract(org.spongepowered.api.event.block.InteractBlockEvent.Secondary,org.spongepowered.api.entity.living.player.Player)" class="member-name-link">onBlockInteract</a><wbr>(org.spongepowered.api.event.block.InteractBlockEvent.Secondary&nbsp;event,
- org.spongepowered.api.entity.living.player.Player&nbsp;player)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(org.spongepowered.api.event.entity.DestructEntityEvent.Death,org.spongepowered.api.entity.living.Living)" class="member-name-link">findWeapon</a><wbr>(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;death,
+ org.spongepowered.api.entity.living.Living&nbsp;dead)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEntityDeath(org.spongepowered.api.event.entity.DestructEntityEvent.Death)" class="member-name-link">onEntityDeath</a><wbr>(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;event)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBlockInteract(org.spongepowered.api.event.block.InteractBlockEvent.Secondary,org.spongepowered.api.entity.living.player.Player)" class="member-name-link">onBlockInteract</a><wbr>(org.spongepowered.api.event.block.InteractBlockEvent.Secondary&nbsp;event,
+ org.spongepowered.api.entity.living.player.Player&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEntityDeath(org.spongepowered.api.event.entity.DestructEntityEvent.Death)" class="member-name-link">onEntityDeath</a><wbr>(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;event)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -202,6 +206,14 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findWeapon</span><wbr><span class="parameters">(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;death,
  org.spongepowered.api.entity.living.Living&nbsp;dead)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findDeathCause(org.spongepowered.api.event.entity.DestructEntityEvent.Death)">
+<h3>findDeathCause</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></span>&nbsp;<span class="element-name">findDeathCause</span><wbr><span class="parameters">(org.spongepowered.api.event.entity.DestructEntityEvent.Death&nbsp;death)</span></div>
 </div>
 </section>
 </li>

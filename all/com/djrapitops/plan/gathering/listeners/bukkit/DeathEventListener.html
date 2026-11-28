@@ -58,14 +58,19 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" tabindex="0">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache,com.djrapitops.plan.gathering.cache.FallingBlockCache)" tabindex="0">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache, FallingBlockCache)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#onDeath(org.bukkit.event.entity.EntityDeathEvent)" tabindex="0">onDeath(EntityDeathEvent)</a></li>
 <li><a href="#onBlockExplodeInteract(org.bukkit.event.player.PlayerInteractEvent)" tabindex="0">onBlockExplodeInteract(PlayerInteractEvent)</a></li>
+<li><a href="#onGravityBlockPlace(org.bukkit.event.block.BlockPlaceEvent)" tabindex="0">onGravityBlockPlace(BlockPlaceEvent)</a></li>
+<li><a href="#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)" tabindex="0">onBlockBreak(BlockBreakEvent)</a></li>
+<li><a href="#onFallingBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)" tabindex="0">onFallingBlockChange(EntityChangeBlockEvent)</a></li>
+<li><a href="#onSuffocationDamage(org.bukkit.event.entity.EntityDamageEvent)" tabindex="0">onSuffocationDamage(EntityDamageEvent)</a></li>
 <li><a href="#findKiller(org.bukkit.entity.Entity)" tabindex="0">findKiller(Entity)</a></li>
+<li><a href="#findDeathCause(org.bukkit.entity.Entity)" tabindex="0">findDeathCause(Entity)</a></li>
 <li><a href="#findWeapon(org.bukkit.entity.Entity)" tabindex="0">findWeapon(Entity)</a></li>
 </ol>
 </li>
@@ -102,10 +107,11 @@ implements org.bukkit.event.Listener</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" class="member-name-link">DeathEventListener</a><wbr>(<a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache,com.djrapitops.plan.gathering.cache.FallingBlockCache)" class="member-name-link">DeathEventListener</a><wbr>(<a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- <a href="../../cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache)</code></div>
+ <a href="../../cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache,
+ <a href="../../cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a>&nbsp;fallingBlockCache)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -121,11 +127,17 @@ implements org.bukkit.event.Listener</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;org.bukkit.entity.Player&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findKiller(org.bukkit.entity.Entity)" class="member-name-link">findKiller</a><wbr>(org.bukkit.entity.Entity&nbsp;dead)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findDeathCause(org.bukkit.entity.Entity)" class="member-name-link">findDeathCause</a><wbr>(org.bukkit.entity.Entity&nbsp;dead)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(org.bukkit.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(org.bukkit.entity.Entity&nbsp;dead)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;org.bukkit.entity.Player&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findKiller(org.bukkit.entity.Entity)" class="member-name-link">findKiller</a><wbr>(org.bukkit.entity.Entity&nbsp;dead)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(org.bukkit.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(org.bukkit.entity.Entity&nbsp;dead)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)" class="member-name-link">onBlockBreak</a><wbr>(org.bukkit.event.block.BlockBreakEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBlockExplodeInteract(org.bukkit.event.player.PlayerInteractEvent)" class="member-name-link">onBlockExplodeInteract</a><wbr>(org.bukkit.event.player.PlayerInteractEvent&nbsp;event)</code></div>
@@ -133,6 +145,15 @@ implements org.bukkit.event.Listener</span></div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDeath(org.bukkit.event.entity.EntityDeathEvent)" class="member-name-link">onDeath</a><wbr>(org.bukkit.event.entity.EntityDeathEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onFallingBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)" class="member-name-link">onFallingBlockChange</a><wbr>(org.bukkit.event.entity.EntityChangeBlockEvent&nbsp;event)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onGravityBlockPlace(org.bukkit.event.block.BlockPlaceEvent)" class="member-name-link">onGravityBlockPlace</a><wbr>(org.bukkit.event.block.BlockPlaceEvent&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onSuffocationDamage(org.bukkit.event.entity.EntityDamageEvent)" class="member-name-link">onSuffocationDamage</a><wbr>(org.bukkit.event.entity.EntityDamageEvent&nbsp;event)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -151,14 +172,15 @@ implements org.bukkit.event.Listener</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache,com.djrapitops.plan.gathering.cache.FallingBlockCache)">
 <h3>DeathEventListener</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">DeathEventListener</span><wbr><span class="parameters">(<a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- <a href="../../cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache)</span></div>
+ <a href="../../cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache,
+ <a href="../../cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a>&nbsp;fallingBlockCache)</span></div>
 </div>
 </section>
 </li>
@@ -187,10 +209,50 @@ implements org.bukkit.event.Listener</span></div>
 </section>
 </li>
 <li>
+<section class="detail" id="onGravityBlockPlace(org.bukkit.event.block.BlockPlaceEvent)">
+<h3>onGravityBlockPlace</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onGravityBlockPlace</span><wbr><span class="parameters">(org.bukkit.event.block.BlockPlaceEvent&nbsp;event)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onBlockBreak(org.bukkit.event.block.BlockBreakEvent)">
+<h3>onBlockBreak</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onBlockBreak</span><wbr><span class="parameters">(org.bukkit.event.block.BlockBreakEvent&nbsp;event)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onFallingBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)">
+<h3>onFallingBlockChange</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onFallingBlockChange</span><wbr><span class="parameters">(org.bukkit.event.entity.EntityChangeBlockEvent&nbsp;event)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onSuffocationDamage(org.bukkit.event.entity.EntityDamageEvent)">
+<h3>onSuffocationDamage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onSuffocationDamage</span><wbr><span class="parameters">(org.bukkit.event.entity.EntityDamageEvent&nbsp;event)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="findKiller(org.bukkit.entity.Entity)">
 <h3>findKiller</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.bukkit.entity.Player&gt;</span>&nbsp;<span class="element-name">findKiller</span><wbr><span class="parameters">(org.bukkit.entity.Entity&nbsp;dead)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findDeathCause(org.bukkit.entity.Entity)">
+<h3>findDeathCause</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></span>&nbsp;<span class="element-name">findDeathCause</span><wbr><span class="parameters">(org.bukkit.entity.Entity&nbsp;dead)</span></div>
 </div>
 </section>
 </li>

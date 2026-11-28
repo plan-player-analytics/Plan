@@ -67,6 +67,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#onMobDeath(cn.nukkit.event.entity.EntityDeathEvent)" tabindex="0">onMobDeath(EntityDeathEvent)</a></li>
 <li><a href="#findKiller(cn.nukkit.entity.Entity)" tabindex="0">findKiller(Entity)</a></li>
 <li><a href="#findWeapon(cn.nukkit.entity.Entity)" tabindex="0">findWeapon(Entity)</a></li>
+<li><a href="#findDeathCause(cn.nukkit.entity.Entity)" tabindex="0">findDeathCause(Entity)</a></li>
 </ol>
 </li>
 </ol>
@@ -120,18 +121,21 @@ implements cn.nukkit.event.Listener</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;cn.nukkit.Player&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findKiller(cn.nukkit.entity.Entity)" class="member-name-link">findKiller</a><wbr>(cn.nukkit.entity.Entity&nbsp;dead)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findDeathCause(cn.nukkit.entity.Entity)" class="member-name-link">findDeathCause</a><wbr>(cn.nukkit.entity.Entity&nbsp;dead)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(cn.nukkit.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(cn.nukkit.entity.Entity&nbsp;dead)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;cn.nukkit.Player&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findKiller(cn.nukkit.entity.Entity)" class="member-name-link">findKiller</a><wbr>(cn.nukkit.entity.Entity&nbsp;dead)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMobDeath(cn.nukkit.event.entity.EntityDeathEvent)" class="member-name-link">onMobDeath</a><wbr>(cn.nukkit.event.entity.EntityDeathEvent&nbsp;event)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(cn.nukkit.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(cn.nukkit.entity.Entity&nbsp;dead)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerDeath(cn.nukkit.event.player.PlayerDeathEvent)" class="member-name-link">onPlayerDeath</a><wbr>(cn.nukkit.event.player.PlayerDeathEvent&nbsp;event)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMobDeath(cn.nukkit.event.entity.EntityDeathEvent)" class="member-name-link">onMobDeath</a><wbr>(cn.nukkit.event.entity.EntityDeathEvent&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerDeath(cn.nukkit.event.player.PlayerDeathEvent)" class="member-name-link">onPlayerDeath</a><wbr>(cn.nukkit.event.player.PlayerDeathEvent&nbsp;event)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -197,6 +201,14 @@ implements cn.nukkit.event.Listener</span></div>
 <h3>findWeapon</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findWeapon</span><wbr><span class="parameters">(cn.nukkit.entity.Entity&nbsp;dead)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findDeathCause(cn.nukkit.entity.Entity)">
+<h3>findDeathCause</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></span>&nbsp;<span class="element-name">findDeathCause</span><wbr><span class="parameters">(cn.nukkit.entity.Entity&nbsp;dead)</span></div>
 </div>
 </section>
 </li>

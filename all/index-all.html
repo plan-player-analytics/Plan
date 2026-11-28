@@ -861,6 +861,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/GeoInfoOptimizationPatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/GeoInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoOptimizationPatch</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsDeathCausePatch</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsOptimizationPatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsOptimizationPatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsServerIDPatch.html#applyPatch()" class="member-name-link">applyPatch()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsServerIDPatch</a></dt>
@@ -1867,6 +1869,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/extension/graph/GraphColors.html#BLACK" class="member-name-link">BLACK</a> - Static variable in class com.djrapitops.plan.extension.graph.<a href="com/djrapitops/plan/extension/graph/GraphColors.html" title="class in com.djrapitops.plan.extension.graph">GraphColors</a></dt>
 <dd>
 <div class="block">Black color set in the theme.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html#blockName()" class="member-name-link">blockName()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>blockName</code> record component.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html#BLUE" class="member-name-link">BLUE</a> - Enum constant in enum class com.djrapitops.plan.delivery.rendering.html.icon.<a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html" title="enum class in com.djrapitops.plan.delivery.rendering.html.icon">Color</a></dt>
 <dd>&nbsp;</dd>
@@ -5073,6 +5079,10 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 </dd>
 <dt><a href="com/djrapitops/plan/settings/locale/LangCode.html#DE" class="member-name-link">DE</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.<a href="com/djrapitops/plan/settings/locale/LangCode.html" title="enum class in com.djrapitops.plan.settings.locale">LangCode</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#DEATH_CAUSE" class="member-name-link">DEATH_CAUSE</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">KillsTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html#DEATH_CAUSE_COLUMN_LENGTH" class="member-name-link">DEATH_CAUSE_COLUMN_LENGTH</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/KillsTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">KillsTable</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/keys/CommonKeys.html#DEATH_COUNT" class="member-name-link">DEATH_COUNT</a> - Static variable in class com.djrapitops.plan.delivery.domain.keys.<a href="com/djrapitops/plan/delivery/domain/keys/CommonKeys.html" title="class in com.djrapitops.plan.delivery.domain.keys">CommonKeys</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/keys/PerServerKeys.html#DEATH_COUNT" class="member-name-link">DEATH_COUNT</a> - Static variable in class com.djrapitops.plan.delivery.domain.keys.<a href="com/djrapitops/plan/delivery/domain/keys/PerServerKeys.html" title="class in com.djrapitops.plan.delivery.domain.keys">PerServerKeys</a></dt>
@@ -5081,6 +5091,12 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#deathCause()" class="member-name-link">deathCause()</a> - Method in record class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>deathCause</code> record component.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html" class="type-name-link" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a> - Enum Class in <a href="com/djrapitops/plan/gathering/domain/package-summary.html">com.djrapitops.plan.gathering.domain</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/objects/KillQueries.html#deathCount(long,long)" class="member-name-link">deathCount(long, long)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/KillQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">KillQueries</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/objects/KillQueries.html#deathCount(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">deathCount(long, long, ServerUUID)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/KillQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">KillQueries</a></dt>
@@ -5107,9 +5123,9 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/nukkit/DeathEventListener.html#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">DeathEventListener(ServerInfo, Processing, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.nukkit.<a href="com/djrapitops/plan/gathering/listeners/nukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.nukkit">DeathEventListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" class="member-name-link">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/DeathEventListener.html#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" class="member-name-link">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache)</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.fabric.<a href="net/playeranalytics/plan/gathering/listeners/fabric/DeathEventListener.html" title="class in net.playeranalytics.plan.gathering.listeners.fabric">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache,com.djrapitops.plan.gathering.cache.FallingBlockCache)" class="member-name-link">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache, FallingBlockCache)</a> - Constructor for class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html#deaths(int)" class="member-name-link">deaths(int)</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData.UserImportDataBuilder</a></dt>
 <dd>&nbsp;</dd>
@@ -6184,6 +6200,10 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>
 <div class="block">Indicates whether some other object is "equal to" this one.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a></dt>
+<dd>
+<div class="block">Indicates whether some other object is "equal to" this one.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/ActiveSession.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/ActiveSession.html" title="class in com.djrapitops.plan.gathering.domain">ActiveSession</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/BaseUser.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a></dt>
@@ -6511,6 +6531,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html#EXPIRES" class="member-name-link">EXPIRES</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">CookieTable</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#EXPIRY_TIME" class="member-name-link">EXPIRY_TIME</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.webuser.<a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables.webuser">RegistrationTable</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#EXPLOSION" class="member-name-link">EXPLOSION</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/cache/ExplosionMetadata.html#explosionBlockName()" class="member-name-link">explosionBlockName()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/ExplosionMetadata.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionMetadata</a></dt>
 <dd>
@@ -7357,6 +7379,21 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 </dd>
 <dt><a href="com/djrapitops/plan/commands/use/CommandWithSubcommands.Builder.html#fallback(java.util.function.BiConsumer)" class="member-name-link">fallback(BiConsumer)</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a> - Class in <a href="com/djrapitops/plan/gathering/cache/package-summary.html">com.djrapitops.plan.gathering.cache</a></dt>
+<dd>
+<div class="block">Tracks player-triggered gravity blocks (sand, gravel, concrete powder)
+through their falling lifecycle to attribute suffocation kills.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html#%3Cinit%3E()" class="member-name-link">FallingBlockCache()</a> - Constructor for class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a> - Record Class in <a href="com/djrapitops/plan/gathering/cache/package-summary.html">com.djrapitops.plan.gathering.cache</a></dt>
+<dd>
+<div class="block">Metadata of a gravity block placed by a player.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html#%3Cinit%3E(java.lang.String,java.util.UUID)" class="member-name-link">FallingBlockMetadata(String, UUID)</a> - Constructor for record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a></dt>
+<dd>
+<div class="block">Creates an instance of a <code>FallingBlockMetadata</code> record class.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/filters/PluginBooleanGroupFilter.SelectedBoolean.html#FALSE" class="member-name-link">FALSE</a> - Enum constant in enum class com.djrapitops.plan.storage.database.queries.filter.filters.<a href="com/djrapitops/plan/storage/database/queries/filter/filters/PluginBooleanGroupFilter.SelectedBoolean.html" title="enum class in com.djrapitops.plan.storage.database.queries.filter.filters">PluginBooleanGroupFilter.SelectedBoolean</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/datatransfer/extension/IconDto.html#family()" class="member-name-link">family()</a> - Method in record class com.djrapitops.plan.delivery.domain.datatransfer.extension.<a href="com/djrapitops/plan/delivery/domain/datatransfer/extension/IconDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer.extension">IconDto</a></dt>
@@ -7971,6 +8008,14 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/PublicHtmlFiles.html#findCustomizedResource(java.lang.String)" class="member-name-link">findCustomizedResource(String)</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/PublicHtmlFiles.html" title="class in com.djrapitops.plan.storage.file">PublicHtmlFiles</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/nukkit/DeathEventListener.html#findDeathCause(cn.nukkit.entity.Entity)" class="member-name-link">findDeathCause(Entity)</a> - Method in class com.djrapitops.plan.gathering.listeners.nukkit.<a href="com/djrapitops/plan/gathering/listeners/nukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.nukkit">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/DeathEventListener.html#findDeathCause(net.minecraft.world.entity.Entity,net.minecraft.world.damagesource.DamageSource)" class="member-name-link">findDeathCause(Entity, DamageSource)</a> - Method in class net.playeranalytics.plan.gathering.listeners.fabric.<a href="net/playeranalytics/plan/gathering/listeners/fabric/DeathEventListener.html" title="class in net.playeranalytics.plan.gathering.listeners.fabric">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#findDeathCause(org.bukkit.entity.Entity)" class="member-name-link">findDeathCause(Entity)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeDeathListener.html#findDeathCause(org.spongepowered.api.event.entity.DestructEntityEvent.Death)" class="member-name-link">findDeathCause(DestructEntityEvent.Death)</a> - Method in class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeDeathListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeDeathListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/java/Reflection.html#findField(java.lang.Class,java.lang.Class)" class="member-name-link">findField(Class, Class)</a> - Static method in class com.djrapitops.plan.utilities.java.<a href="com/djrapitops/plan/utilities/java/Reflection.html" title="class in com.djrapitops.plan.utilities.java">Reflection</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/storage/queries/graph/ExtensionGraphQueries.html#findGraphTableName(java.lang.String)" class="member-name-link">findGraphTableName(String)</a> - Static method in class com.djrapitops.plan.extension.implementation.storage.queries.graph.<a href="com/djrapitops/plan/extension/implementation/storage/queries/graph/ExtensionGraphQueries.html" title="class in com.djrapitops.plan.extension.implementation.storage.queries.graph">ExtensionGraphQueries</a></dt>
@@ -8302,6 +8347,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dt><a href="com/djrapitops/plan/delivery/webserver/cache/JSONStorage.StoredJSON.html#fromObject(java.lang.Object,long)" class="member-name-link">fromObject(Object, long)</a> - Static method in class com.djrapitops.plan.delivery.webserver.cache.<a href="com/djrapitops/plan/delivery/webserver/cache/JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/datatransfer/ServerDto.html#fromServer(com.djrapitops.plan.identification.Server)" class="member-name-link">fromServer(Server)</a> - Static method in record class com.djrapitops.plan.delivery.domain.datatransfer.<a href="com/djrapitops/plan/delivery/domain/datatransfer/ServerDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">ServerDto</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/ServerUUID.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a></dt>
 <dd>&nbsp;</dd>
@@ -9865,6 +9912,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/bar/Bar.html#getLabel()" class="member-name-link">getLabel()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.bar.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/bar/Bar.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.bar">Bar</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackGraph.html#getLabels()" class="member-name-link">getLabels()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.stack.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/stack/StackGraph.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.stack">StackGraph</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html#getLandedBlock(java.lang.String,int,int,int)" class="member-name-link">getLandedBlock(String, int, int, int)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/Locale.html#getLangCode()" class="member-name-link">getLangCode()</a> - Method in class com.djrapitops.plan.settings.locale.<a href="com/djrapitops/plan/settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></dt>
 <dd>&nbsp;</dd>
@@ -12413,6 +12462,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/GeoInfoOptimizationPatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/GeoInfoOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">GeoInfoOptimizationPatch</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsDeathCausePatch</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsOptimizationPatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsOptimizationPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsOptimizationPatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsServerIDPatch.html#hasBeenApplied()" class="member-name-link">hasBeenApplied()</a> - Method in class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsServerIDPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsServerIDPatch</a></dt>
@@ -12806,6 +12857,10 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dt><a href="com/djrapitops/plan/extension/table/Table.html#hashCode()" class="member-name-link">hashCode()</a> - Method in class com.djrapitops.plan.extension.table.<a href="com/djrapitops/plan/extension/table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/cache/ExplosionMetadata.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/ExplosionMetadata.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionMetadata</a></dt>
+<dd>
+<div class="block">Returns a hash code value for this object.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html#hashCode()" class="member-name-link">hashCode()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a></dt>
 <dd>
 <div class="block">Returns a hash code value for this object.</div>
 </dd>
@@ -13975,6 +14030,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/ResourceCache.html#invalidateAll()" class="member-name-link">invalidateAll()</a> - Static method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/ResourceCache.html" title="class in com.djrapitops.plan.storage.file">ResourceCache</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html#invalidateLandedBlock(java.lang.String,int,int,int)" class="member-name-link">invalidateLandedBlock(String, int, int, int)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/annotation/InvalidateMethod.html" class="type-name-link" title="annotation interface in com.djrapitops.plan.extension.annotation">InvalidateMethod</a> - Annotation Interface in <a href="com/djrapitops/plan/extension/annotation/package-summary.html">com.djrapitops.plan.extension.annotation</a></dt>
 <dd>
 <div class="block">Annotation used to invalidate old method values.</div>
@@ -14624,6 +14681,12 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dt><a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html#kills(java.util.Collection)" class="member-name-link">kills(Collection)</a> - Method in class com.djrapitops.plan.gathering.importing.data.<a href="com/djrapitops/plan/gathering/importing/data/UserImportData.UserImportDataBuilder.html" title="class in com.djrapitops.plan.gathering.importing.data">UserImportData.UserImportDataBuilder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/cache/DataID.html#KILLS" class="member-name-link">KILLS</a> - Enum constant in enum class com.djrapitops.plan.delivery.webserver.cache.<a href="com/djrapitops/plan/delivery/webserver/cache/DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsDeathCausePatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
+<dd>
+<div class="block">Adds death_cause column to plan_kills and populates unambiguous existing rows.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html#%3Cinit%3E()" class="member-name-link">KillsDeathCausePatch()</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/KillsDeathCausePatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsDeathCausePatch</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/KillsOptimizationPatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">KillsOptimizationPatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
 <dd>
@@ -15619,6 +15682,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 </dd>
 <dt><a href="com/djrapitops/plan/exceptions/database/MariaDB11Exception.html#%3Cinit%3E(java.lang.String,java.lang.Throwable)" class="member-name-link">MariaDB11Exception(String, Throwable)</a> - Constructor for exception class com.djrapitops.plan.exceptions.database.<a href="com/djrapitops/plan/exceptions/database/MariaDB11Exception.html" title="class in com.djrapitops.plan.exceptions.database">MariaDB11Exception</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html#markBlockLanded(java.util.UUID,java.lang.String,int,int,int)" class="member-name-link">markBlockLanded(UUID, String, int, int, int)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/providers/gathering/Conditions.html#matchesCondition(java.lang.String,java.lang.String)" class="member-name-link">matchesCondition(String, String)</a> - Static method in class com.djrapitops.plan.extension.implementation.providers.gathering.<a href="com/djrapitops/plan/extension/implementation/providers/gathering/Conditions.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">Conditions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/html/icon/Color.html#matchString(java.lang.String)" class="member-name-link">matchString(String)</a> - Static method in enum class com.djrapitops.plan.utilities.html.icon.<a href="com/djrapitops/plan/utilities/html/icon/Color.html" title="enum class in com.djrapitops.plan.utilities.html.icon">Color</a></dt>
@@ -15689,6 +15754,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>
 <div class="block">Returns the value of the <code>mediumThreshold</code> record component.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#MELEE" class="member-name-link">MELEE</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/logging/ErrorContext.html#merge(com.djrapitops.plan.utilities.logging.ErrorContext)" class="member-name-link">merge(ErrorContext)</a> - Method in class com.djrapitops.plan.utilities.logging.<a href="com/djrapitops/plan/utilities/logging/ErrorContext.html" title="class in com.djrapitops.plan.utilities.logging">ErrorContext</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/LargeStoreQueries.html#mergeBaseUsers(java.util.List,com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable)" class="member-name-link">mergeBaseUsers(List, LookupTable)</a> - Static method in class com.djrapitops.plan.storage.database.queries.<a href="com/djrapitops/plan/storage/database/queries/LargeStoreQueries.html" title="class in com.djrapitops.plan.storage.database.queries">LargeStoreQueries</a></dt>
@@ -16724,6 +16791,8 @@ player.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html#onBackup(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onBackup(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#onBlockBreak(org.bukkit.event.block.BlockBreakEvent)" class="member-name-link">onBlockBreak(BlockBreakEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#onBlockExplodeInteract(org.bukkit.event.player.PlayerInteractEvent)" class="member-name-link">onBlockExplodeInteract(PlayerInteractEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeDeathListener.html#onBlockInteract(org.spongepowered.api.event.block.InteractBlockEvent.Secondary,org.spongepowered.api.entity.living.player.Player)" class="member-name-link">onBlockInteract(InteractBlockEvent.Secondary, Player)</a> - Method in class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeDeathListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeDeathListener</a></dt>
@@ -16802,6 +16871,8 @@ player.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/DataUtilityCommands.html#onExport(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onExport(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DataUtilityCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DataUtilityCommands</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#onFallingBlockChange(org.bukkit.event.entity.EntityChangeBlockEvent)" class="member-name-link">onFallingBlockChange(EntityChangeBlockEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html#onFixFabricJoinAddresses(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onFixFabricJoinAddresses(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.subcommands.<a href="com/djrapitops/plan/commands/subcommands/DatabaseCommands.html" title="class in com.djrapitops.plan.commands.subcommands">DatabaseCommands</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/nukkit/GameModeChangeListener.html#onGameModeChange(cn.nukkit.event.player.PlayerGameModeChangeEvent)" class="member-name-link">onGameModeChange(PlayerGameModeChangeEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.nukkit.<a href="com/djrapitops/plan/gathering/listeners/nukkit/GameModeChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.nukkit">GameModeChangeListener</a></dt>
@@ -16817,6 +16888,8 @@ player.</div>
 <dt><a href="net/playeranalytics/plan/gathering/mixin/ServerPlayerMixin.html#onGameModeChanged(net.minecraft.world.level.GameType,org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable)" class="member-name-link">onGameModeChanged(GameType, CallbackInfoReturnable)</a> - Method in class net.playeranalytics.plan.gathering.mixin.<a href="net/playeranalytics/plan/gathering/mixin/ServerPlayerMixin.html" title="class in net.playeranalytics.plan.gathering.mixin">ServerPlayerMixin</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeGMChangeListener.html#onGMChange(org.spongepowered.api.event.data.ChangeDataHolderEvent.ValueChange)" class="member-name-link">onGMChange(ChangeDataHolderEvent.ValueChange)</a> - Method in class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeGMChangeListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeGMChangeListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#onGravityBlockPlace(org.bukkit.event.block.BlockPlaceEvent)" class="member-name-link">onGravityBlockPlace(BlockPlaceEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnClientHandshake.html#onHandshake(net.minecraft.network.protocol.handshake.ClientIntentionPacket)" class="member-name-link">onHandshake(ClientIntentionPacket)</a> - Method in interface net.playeranalytics.plan.gathering.listeners.events.<a href="net/playeranalytics/plan/gathering/listeners/events/PlanFabricEvents.OnClientHandshake.html" title="interface in net.playeranalytics.plan.gathering.listeners.events">PlanFabricEvents.OnClientHandshake</a></dt>
 <dd>
@@ -17074,6 +17147,8 @@ player.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeAFKListener.html#onSettingsChange(org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettingsEvent)" class="member-name-link">onSettingsChange(PlayerChangeClientSettingsEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.sponge.<a href="com/djrapitops/plan/gathering/listeners/sponge/SpongeAFKListener.html" title="class in com.djrapitops.plan.gathering.listeners.sponge">SpongeAFKListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html#onSuffocationDamage(org.bukkit.event.entity.EntityDamageEvent)" class="member-name-link">onSuffocationDamage(EntityDamageEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.bukkit.<a href="com/djrapitops/plan/gathering/listeners/bukkit/DeathEventListener.html" title="class in com.djrapitops.plan.gathering.listeners.bukkit">DeathEventListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/CommandWithSubcommands.html#onTabComplete(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onTabComplete(CMDSender, Arguments)</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/CommandWithSubcommands.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/Subcommand.Builder.html#onTabComplete(java.util.function.BiFunction)" class="member-name-link">onTabComplete(BiFunction)</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/Subcommand.Builder.html" title="class in com.djrapitops.plan.commands.use">Subcommand.Builder</a></dt>
@@ -17200,6 +17275,8 @@ player.</div>
 <dd>
 <div class="block">Utility for loading version information from Ore, Sponge's plugin repository</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#OTHER" class="member-name-link">OTHER</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/OutOf.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.domain">OutOf</a> - Class in <a href="com/djrapitops/plan/delivery/domain/package-summary.html">com.djrapitops.plan.delivery.domain</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/OutOf.html#%3Cinit%3E(long,long,com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint.FormatType)" class="member-name-link">OutOf(long, long, Datapoint.FormatType)</a> - Constructor for class com.djrapitops.plan.delivery.domain.<a href="com/djrapitops/plan/delivery/domain/OutOf.html" title="class in com.djrapitops.plan.delivery.domain">OutOf</a></dt>
@@ -17766,6 +17843,8 @@ player.</div>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/PerServerMutator.html#%3Cinit%3E(com.djrapitops.plan.delivery.domain.container.PerServerContainer)" class="member-name-link">PerServerMutator(PerServerContainer)</a> - Constructor for class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/PerServerMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">PerServerMutator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/addons/placeholderapi/PlanPlaceholderExtension.html#persist()" class="member-name-link">persist()</a> - Method in class com.djrapitops.plan.addons.placeholderapi.<a href="com/djrapitops/plan/addons/placeholderapi/PlanPlaceholderExtension.html" title="class in com.djrapitops.plan.addons.placeholderapi">PlanPlaceholderExtension</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#PET" class="member-name-link">PET</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/Graphs.html#pie()" class="member-name-link">pie()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a></dt>
 <dd>&nbsp;</dd>
@@ -18375,7 +18454,9 @@ player.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)" class="member-name-link">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, ServerIdentifier, String, long)</a> - Constructor for record class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)" class="member-name-link">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, String, long, ServerIdentifier)</a> - Constructor for record class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long)" class="member-name-link">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, ServerIdentifier, String, DeathCause, long)</a> - Constructor for record class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/PlayerKill.html#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long,com.djrapitops.plan.delivery.domain.ServerIdentifier)" class="member-name-link">PlayerKill(PlayerKill.Killer, PlayerKill.Victim, String, DeathCause, long, ServerIdentifier)</a> - Constructor for record class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>PlayerKill</code> record class.</div>
 </dd>
@@ -18406,7 +18487,7 @@ player.</div>
 <div class="block">Processor Class for KillEvent information when the killer is a
 player.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/processing/processors/player/PlayerKillProcessor.html#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,long)" class="member-name-link">PlayerKillProcessor(PlayerKill.Killer, PlayerKill.Victim, ServerIdentifier, String, long)</a> - Constructor for class com.djrapitops.plan.processing.processors.player.<a href="com/djrapitops/plan/processing/processors/player/PlayerKillProcessor.html" title="class in com.djrapitops.plan.processing.processors.player">PlayerKillProcessor</a></dt>
+<dt><a href="com/djrapitops/plan/processing/processors/player/PlayerKillProcessor.html#%3Cinit%3E(com.djrapitops.plan.gathering.domain.PlayerKill.Killer,com.djrapitops.plan.gathering.domain.PlayerKill.Victim,com.djrapitops.plan.delivery.domain.ServerIdentifier,java.lang.String,com.djrapitops.plan.gathering.domain.DeathCause,long)" class="member-name-link">PlayerKillProcessor(PlayerKill.Killer, PlayerKill.Victim, ServerIdentifier, String, DeathCause, long)</a> - Constructor for class com.djrapitops.plan.processing.processors.player.<a href="com/djrapitops/plan/processing/processors/player/PlayerKillProcessor.html" title="class in com.djrapitops.plan.processing.processors.player">PlayerKillProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/datapoint/types/PlayerKills.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayerKills</a> - Class in <a href="com/djrapitops/plan/delivery/rendering/json/datapoint/types/package-summary.html">com.djrapitops.plan.delivery.rendering.json.datapoint.types</a></dt>
 <dd>
@@ -18721,6 +18802,10 @@ player.</div>
 <div class="block">Returns the value of the <code>playerUUID</code> record component.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/gathering/cache/ExplosionMetadata.html#playerUUID()" class="member-name-link">playerUUID()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/ExplosionMetadata.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionMetadata</a></dt>
+<dd>
+<div class="block">Returns the value of the <code>playerUUID</code> record component.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html#playerUUID()" class="member-name-link">playerUUID()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a></dt>
 <dd>
 <div class="block">Returns the value of the <code>playerUUID</code> record component.</div>
 </dd>
@@ -19073,6 +19158,8 @@ player.</div>
 <dt><a href="com/djrapitops/plan/utilities/logging/ProgressTracker.html" class="type-name-link" title="class in com.djrapitops.plan.utilities.logging">ProgressTracker</a> - Class in <a href="com/djrapitops/plan/utilities/logging/package-summary.html">com.djrapitops.plan.utilities.logging</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/logging/ProgressTracker.html#%3Cinit%3E(int)" class="member-name-link">ProgressTracker(int)</a> - Constructor for class com.djrapitops.plan.utilities.logging.<a href="com/djrapitops/plan/utilities/logging/ProgressTracker.html" title="class in com.djrapitops.plan.utilities.logging">ProgressTracker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#PROJECTILE" class="member-name-link">PROJECTILE</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/extension/ExtensionProviderTable.html#PROVIDED_CONDITION" class="member-name-link">PROVIDED_CONDITION</a> - Static variable in class com.djrapitops.plan.storage.database.sql.tables.extension.<a href="com/djrapitops/plan/storage/database/sql/tables/extension/ExtensionProviderTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables.extension">ExtensionProviderTable</a></dt>
 <dd>&nbsp;</dd>
@@ -19641,6 +19728,8 @@ player.</div>
 <dt><a href="com/djrapitops/plan/utilities/dev/Untrusted.html#reason()" class="member-name-link">reason()</a> - Element in annotation interface com.djrapitops.plan.utilities.dev.<a href="com/djrapitops/plan/utilities/dev/Untrusted.html" title="annotation interface in com.djrapitops.plan.utilities.dev">Untrusted</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.Reconnector.html#reconnect()" class="member-name-link">reconnect()</a> - Method in interface com.djrapitops.plan.storage.upkeep.<a href="com/djrapitops/plan/storage/upkeep/DBKeepAliveTask.Reconnector.html" title="interface in com.djrapitops.plan.storage.upkeep">DBKeepAliveTask.Reconnector</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html#recordTrigger(java.lang.String,int,int,int,java.util.UUID)" class="member-name-link">recordTrigger(String, int, int, int, UUID)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html#RED" class="member-name-link">RED</a> - Enum constant in enum class com.djrapitops.plan.delivery.rendering.html.icon.<a href="com/djrapitops/plan/delivery/rendering/html/icon/Color.html" title="enum class in com.djrapitops.plan.delivery.rendering.html.icon">Color</a></dt>
 <dd>&nbsp;</dd>
@@ -23092,6 +23181,8 @@ without a reload.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#successResponse()" class="member-name-link">successResponse()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#SUFFOCATION" class="member-name-link">SUFFOCATION</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/VelocityCommand.html#suggest(com.velocitypowered.api.command.SimpleCommand.Invocation)" class="member-name-link">suggest(SimpleCommand.Invocation)</a> - Method in class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/VelocityCommand.html" title="class in com.djrapitops.plan.commands.use">VelocityCommand</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/building/Sql.html#sum(java.lang.String)" class="member-name-link">sum(String)</a> - Static method in class com.djrapitops.plan.storage.database.sql.building.<a href="com/djrapitops/plan/storage/database/sql/building/Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></dt>
@@ -24569,6 +24660,10 @@ without a reload.</div>
 <dd>
 <div class="block">Returns a string representation of this record class.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html#toString()" class="member-name-link">toString()</a> - Method in record class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockMetadata.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockMetadata</a></dt>
+<dd>
+<div class="block">Returns a string representation of this record class.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/ActiveSession.html#toString()" class="member-name-link">toString()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/ActiveSession.html" title="class in com.djrapitops.plan.gathering.domain">ActiveSession</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/BaseUser.html#toString()" class="member-name-link">toString()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain">BaseUser</a></dt>
@@ -24833,6 +24928,8 @@ without a reload.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/Slf4jLoggerWrapper.html#trace(org.slf4j.Marker,java.lang.String,java.lang.Throwable)" class="member-name-link">trace(Marker, String, Throwable)</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/Slf4jLoggerWrapper.html" title="class in com.djrapitops.plan">Slf4jLoggerWrapper</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html#trackFallingBlock(java.util.UUID,java.lang.String,int,int,int,java.lang.String)" class="member-name-link">trackFallingBlock(UUID, String, int, int, int, String)</a> - Method in class com.djrapitops.plan.gathering.cache.<a href="com/djrapitops/plan/gathering/cache/FallingBlockCache.html" title="class in com.djrapitops.plan.gathering.cache">FallingBlockCache</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/Transaction.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/package-summary.html">com.djrapitops.plan.storage.database.transactions</a></dt>
 <dd>
 <div class="block">Represents a database transaction.</div>
@@ -25000,6 +25097,8 @@ without a reload.</div>
 <dd>
 <div class="block">Returns the value of the <code>unitNames</code> record component.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#UNKNOWN" class="member-name-link">UNKNOWN</a> - Enum constant in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/GenericLang.html#UNKNOWN" class="member-name-link">UNKNOWN</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/GenericLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">GenericLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/ErrorPageLang.html#UNKNOWN_PAGE_404" class="member-name-link">UNKNOWN_PAGE_404</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/ErrorPageLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">ErrorPageLang</a></dt>
@@ -25626,6 +25725,10 @@ without a reload.</div>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/processing/processors/move/DatabaseCopyProcessor.Strategy.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.djrapitops.plan.processing.processors.move.<a href="com/djrapitops/plan/processing/processors/move/DatabaseCopyProcessor.Strategy.html" title="enum class in com.djrapitops.plan.processing.processors.move">DatabaseCopyProcessor.Strategy</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -25849,6 +25952,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/extension/table/TableColumnFormat.html#values()" class="member-name-link">values()</a> - Static method in enum class com.djrapitops.plan.extension.table.<a href="com/djrapitops/plan/extension/table/TableColumnFormat.html" title="enum class in com.djrapitops.plan.extension.table">TableColumnFormat</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/domain/DeathCause.html#values()" class="member-name-link">values()</a> - Static method in enum class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/DeathCause.html" title="enum class in com.djrapitops.plan.gathering.domain">DeathCause</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
