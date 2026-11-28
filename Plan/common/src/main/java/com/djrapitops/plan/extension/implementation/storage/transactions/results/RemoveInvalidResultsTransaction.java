@@ -50,6 +50,9 @@ public class RemoveInvalidResultsTransaction extends ThrowawayTransaction {
         for (String invalidatedMethod : invalidatedMethods) {
             execute(deleteInvalidPlayerMethodResults(invalidatedMethod));
             execute(deleteInvalidServerMethodResults(invalidatedMethod));
+            execute(deleteInvalidPlayerFlagResults(invalidatedMethod));
+            execute(deleteInvalidServerFlagResults(invalidatedMethod));
+            execute(deleteInvalidFlags(invalidatedMethod));
             execute(deleteInvalidMethodProvider(invalidatedMethod));
 
             execute(deleteInvalidPlayerTableResults(invalidatedMethod));
@@ -72,6 +75,43 @@ public class RemoveInvalidResultsTransaction extends ThrowawayTransaction {
     private Executable deleteInvalidServerMethodResults(String invalidMethod) {
         String sql = DELETE_FROM + ExtensionServerValueTable.TABLE_NAME +
                 WHERE + ExtensionServerValueTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, invalidMethod, pluginName, serverUUID);
+            }
+        };
+    }
+
+    private Executable deleteInvalidPlayerFlagResults(String invalidMethod) {
+        String sql = DELETE_FROM + ExtensionFlagPlayerValueTable.TABLE_NAME +
+                WHERE + ExtensionFlagPlayerValueTable.FLAG_ID + " IN (" + SELECT + ExtensionFlagTable.ID +
+                FROM + ExtensionFlagTable.TABLE_NAME +
+                WHERE + ExtensionFlagTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ')';
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, invalidMethod, pluginName, serverUUID);
+            }
+        };
+    }
+
+    private Executable deleteInvalidServerFlagResults(String invalidMethod) {
+        String sql = DELETE_FROM + ExtensionFlagServerValueTable.TABLE_NAME +
+                WHERE + ExtensionFlagServerValueTable.FLAG_ID + " IN (" + SELECT + ExtensionFlagTable.ID +
+                FROM + ExtensionFlagTable.TABLE_NAME +
+                WHERE + ExtensionFlagTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ')';
+        return new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, invalidMethod, pluginName, serverUUID);
+            }
+        };
+    }
+
+    private Executable deleteInvalidFlags(String invalidMethod) {
+        String sql = DELETE_FROM + ExtensionFlagTable.TABLE_NAME +
+                WHERE + ExtensionFlagTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

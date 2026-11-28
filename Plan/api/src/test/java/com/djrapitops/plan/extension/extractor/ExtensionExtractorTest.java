@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
+import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.table.Table;
 import org.junit.jupiter.api.Test;
 
@@ -624,5 +625,59 @@ class ExtensionExtractorTest {
                 "Warnings: [Extension.method 'displayName' was over 50 characters.]",
                 assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
         );
+    }
+
+    @Test
+    void flagsProviderSupportsServerAndPlayerRoutes() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @FlagsProvider(text = "Flags")
+            public Flags serverFlags() {
+                return Flags.create();
+            }
+
+            @FlagsProvider(text = "Flags")
+            public Flags playerFlags(UUID playerUUID) {
+                return Flags.create();
+            }
+
+            @FlagsProvider(text = "Flags")
+            public Flags playerFlags(String playerName) {
+                return Flags.create();
+            }
+        }
+
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> methods = new ExtensionExtractor(new Extension()).getMethods();
+        assertEquals(1, methods.get(ExtensionMethod.ParameterType.SERVER_NONE).getFlagsProviders().size());
+        assertEquals(1, methods.get(ExtensionMethod.ParameterType.PLAYER_UUID).getFlagsProviders().size());
+        assertEquals(1, methods.get(ExtensionMethod.ParameterType.PLAYER_STRING).getFlagsProviders().size());
+    }
+
+    @Test
+    void flagsProviderMustReturnFlags() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @FlagsProvider(text = "Flags")
+            public Object method() {
+                return null;
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertEquals("Extension.method has invalid return type. was: java.lang.Object, expected: com.djrapitops.plan.extension.statistic.Flags", assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage());
+    }
+
+    @Test
+    void flagsProviderDoesNotSupportGroupParameter() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @FlagsProvider(text = "Flags")
+            public Flags method(Group group) {
+                return Flags.create();
+            }
+        }
+
+        ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
+        assertThrows(IllegalArgumentException.class, underTest::validateAnnotations);
     }
 }

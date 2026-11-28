@@ -20,6 +20,9 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionFlagPlayerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionFlagServerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionFlagTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -90,9 +93,28 @@ public class CreateIndexTransaction extends Transaction {
                 WorldTimesTable.USER_ID, WorldTimesTable.SERVER_ID, WorldTimesTable.WORLD_ID);
         createIndex(StatisticValueTable.TABLE_NAME, "plan_statistic_value_user_server_statistic",
                 StatisticValueTable.USER_ID, StatisticValueTable.SERVER_ID, StatisticValueTable.STATISTIC_ID);
+
+        createUniqueIndex(ExtensionFlagTable.TABLE_NAME, "plan_extension_flag_provider_name",
+                ExtensionFlagTable.PROVIDER_ID, ExtensionFlagTable.FLAG_NAME);
+        createUniqueIndex(ExtensionFlagPlayerValueTable.TABLE_NAME, "plan_extension_player_flag_scope",
+                ExtensionFlagPlayerValueTable.FLAG_ID, ExtensionFlagPlayerValueTable.USER_ID, ExtensionFlagPlayerValueTable.SERVER_ID);
+        createIndex(ExtensionFlagPlayerValueTable.TABLE_NAME, "plan_extension_player_flag_lock",
+                ExtensionFlagPlayerValueTable.USER_ID, ExtensionFlagPlayerValueTable.SERVER_ID, ExtensionFlagPlayerValueTable.FLAG_ID);
+        createUniqueIndex(ExtensionFlagServerValueTable.TABLE_NAME, "plan_extension_server_flag_scope",
+                ExtensionFlagServerValueTable.FLAG_ID, ExtensionFlagServerValueTable.SERVER_ID);
+        createIndex(ExtensionFlagServerValueTable.TABLE_NAME, "plan_extension_server_flag_lock",
+                ExtensionFlagServerValueTable.SERVER_ID, ExtensionFlagServerValueTable.FLAG_ID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {
+        createIndex(tableName, indexName, false, indexedColumns);
+    }
+
+    private void createUniqueIndex(String tableName, String indexName, String... indexedColumns) {
+        createIndex(tableName, indexName, true, indexedColumns);
+    }
+
+    private void createIndex(String tableName, String indexName, boolean unique, String... indexedColumns) {
         if (indexedColumns.length == 0) {
             throw new IllegalArgumentException("Can not create index without columns");
         }
@@ -103,7 +125,11 @@ public class CreateIndexTransaction extends Transaction {
             if (indexExists) return;
         }
 
-        TextStringBuilder sql = new TextStringBuilder("CREATE INDEX ");
+        TextStringBuilder sql = new TextStringBuilder("CREATE ");
+        if (unique) {
+            sql.append("UNIQUE ");
+        }
+        sql.append("INDEX ");
         if (!isMySQL) {
             sql.append("IF NOT EXISTS ");
         }

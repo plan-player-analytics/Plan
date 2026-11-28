@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.aggregate.*;
+import com.djrapitops.plan.extension.implementation.storage.queries.flags.ExtensionServerFlagsQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.extension.implementation.storage.queries.statistics.ExtensionServerStatisticsQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionServerTablesQuery;
@@ -33,7 +34,6 @@ import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -77,8 +77,9 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
         combine(extensionDataByPluginID, db.query(new ExtensionAggregatePercentagesQuery(serverUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionServerTablesQuery(serverUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionAggregateGroupsQuery(serverUUID)));
-        combine(extensionDataByPluginID, db.query(ExtensionGraphQueries.findGraphTableNameTabs(serverUUID, ExtensionGraphMetadataTable.TableType.SERVER)));
+        combine(extensionDataByPluginID, db.query(ExtensionGraphQueries.findGraphTableNameTabs(serverUUID, TableType.SERVER)));
         combine(extensionDataByPluginID, db.query(new ExtensionServerStatisticsQuery(serverUUID)));
+        combine(extensionDataByPluginID, db.query(new ExtensionServerFlagsQuery(serverUUID)));
 
         return combineWithExtensionInfo(extensionsOfServer, extensionDataByPluginID);
     }

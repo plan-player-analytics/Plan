@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.graph.GroupGraphDataSource;
 import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
 import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
+import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
@@ -244,6 +245,13 @@ public final class ExtensionExtractor {
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
+    private void validateMethod(ExtensionMethod extensionMethod, FlagsProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, Flags.class);
+        validateMethodArguments(method, false, UUID.class, String.class);
+    }
+
     private void validateMethod(ExtensionMethod extensionMethod, GroupProvider annotation) {
         Method method = extensionMethod.getMethod();
 
@@ -322,6 +330,10 @@ public final class ExtensionExtractor {
             method.getAnnotation(StatisticsProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addStatisticsMethod(method);
+            });
+            method.getAnnotation(FlagsProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addFlagsMethod(method);
             });
             method.getAnnotation(GroupProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);

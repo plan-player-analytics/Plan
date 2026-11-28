@@ -30,6 +30,14 @@ public record IconDto(
         this(Icon.fromExtensionIcon(extensionIcon));
     }
 
+    static IconDto withoutColor(com.djrapitops.plan.extension.icon.Icon extensionIcon) {
+        return new IconDto(new com.djrapitops.plan.extension.icon.Icon(
+                extensionIcon.getFamily(),
+                extensionIcon.getName(),
+                com.djrapitops.plan.extension.icon.Color.NONE
+        ));
+    }
+
     private IconDto(Icon icon) {
         this(
                 icon.getFamily().name(),

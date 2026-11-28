@@ -34,6 +34,7 @@ public interface DatabaseTestAggregate extends
         AllowlistQueriesTest,
         DatabaseBackupTest,
         ExtensionsDatabaseTest,
+        ExtensionFlagsDatabaseTest,
         GeolocationQueriesTest,
         NicknameQueriesTest,
         PingQueriesTest,

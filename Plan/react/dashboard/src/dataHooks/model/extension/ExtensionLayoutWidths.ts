@@ -86,7 +86,7 @@ export const computeLayoutWidths = (
     const hasTable = tabs.some((tab) => tab.tableData?.length);
     const hasGroups = false;
     const hasStatistics = tabs.some((tab) => tab.statisticsData?.length);
-    const hasFlags = false;
+    const hasFlags = tabs.some((tab) => tab.flagsData?.length);
     const includedItems: Set<ElementOrder> = new Set(
         [
             hasValues ? ('VALUES' as const) : undefined,

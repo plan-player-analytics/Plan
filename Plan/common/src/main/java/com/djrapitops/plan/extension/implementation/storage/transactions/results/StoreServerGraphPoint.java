@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.extension.graph.DataPoint;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.ExpandGraphColumnCountTransaction;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -48,7 +49,7 @@ public class StoreServerGraphPoint extends Transaction {
         executeOther(new ExpandGraphColumnCountTransaction(identifier, columnCount));
 
         String sql = ExtensionGraphMetadataTable.insertToGraphTableSql(identifier.getPluginName(), identifier.getProviderName(), columnCount,
-                ExtensionGraphMetadataTable.TableType.SERVER);
+                TableType.SERVER);
         execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

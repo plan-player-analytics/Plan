@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
@@ -47,7 +48,7 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
 
     @Override
     public Optional<ExtensionGraphDto> executeQuery(SQLDB db) {
-        Optional<ExtensionGraphDto> metadata = db.query(ExtensionGraphQueries.getGraphMetadata(graphTableName, ExtensionGraphMetadataTable.TableType.SERVER, serverUUID));
+        Optional<ExtensionGraphDto> metadata = db.query(ExtensionGraphQueries.getGraphMetadata(graphTableName, TableType.SERVER, serverUUID));
         if (metadata.isEmpty()) {
             return Optional.empty();
         }
@@ -88,7 +89,7 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
 
     private void addValues(SQLDB db, ExtensionGraphDto extensionGraphDto) {
         extensionGraphDto.dataPoints().addAll(db.queryList(ExtensionGraphMetadataTable.selectFromGraphTableSql(
-                        extensionGraphDto.graphTableName(), ExtensionGraphMetadataTable.TableType.SERVER),
+                        extensionGraphDto.graphTableName(), TableType.SERVER),
                 row -> extractDataPoint(row, extensionGraphDto), serverUUID));
     }
 
