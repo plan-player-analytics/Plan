@@ -6,6 +6,8 @@ builds/
 # Nukkit & Fabric create log files during tests for some reason.
 server.log
 /Plan/fabric/logs/
+/Plan/nukkit/logs/
+.junie/
 
 *.db
 
