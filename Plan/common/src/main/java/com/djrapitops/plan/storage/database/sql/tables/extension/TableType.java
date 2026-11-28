@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables.extension;
 
+import com.djrapitops.plan.extension.extractor.ExtensionMethod.ParameterType;
+
 /**
  * @author AuroraLS3
  */
@@ -30,10 +32,6 @@ public enum TableType {
         this.type = type;
     }
 
-    public int getType() {
-        return type;
-    }
-
     public static TableType fromType(int type) {
         for (TableType tableType : values()) {
             if (tableType.getType() == type) {
@@ -41,5 +39,17 @@ public enum TableType {
             }
         }
         throw new IllegalArgumentException("Unknown table type: " + type);
+    }
+
+    public static TableType forParameterType(ParameterType parameterType) {
+        return switch (parameterType) {
+            case SERVER_NONE -> SERVER;
+            case PLAYER_STRING, PLAYER_UUID -> PLAYER;
+            case GROUP -> GROUP;
+        };
+    }
+
+    public int getType() {
+        return type;
     }
 }

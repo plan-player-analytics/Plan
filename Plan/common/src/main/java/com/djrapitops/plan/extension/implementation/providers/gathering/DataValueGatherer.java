@@ -39,12 +39,12 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTa
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
 import com.djrapitops.plan.extension.statistic.Flags;
 import com.djrapitops.plan.extension.statistic.Statistics;
-import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.sql.tables.extension.TableType;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -548,11 +548,7 @@ public class DataValueGatherer {
 
         Database db = dbSystem.getDatabase();
         extensionMetadataStorage.storeProvider(information, parameters);
-        TableType tableType = switch (data.getParameterType()) {
-            case SERVER_NONE -> TableType.SERVER;
-            case PLAYER_STRING, PLAYER_UUID -> TableType.PLAYER;
-            case GROUP -> throw new IllegalArgumentException("Group flag providers are not supported.");
-        };
+        TableType tableType = TableType.forParameterType(data.getParameterType());
         db.executeTransaction(new StoreFlagsResultTransaction(information, parameters, value, tableType));
     }
 
