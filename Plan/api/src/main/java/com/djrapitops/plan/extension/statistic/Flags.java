@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.statistic;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,6 +58,28 @@ public final class Flags {
      */
     public Flags putAll(Map<String, Boolean> flags) {
         valueByKey.putAll(flags);
+        return this;
+    }
+
+    /**
+     * Place flags with value 'true' in the object.
+     *
+     * @param trueFlags List of flag names
+     * @return This object.
+     */
+    public Flags addAllTrue(Collection<String> trueFlags) {
+        trueFlags.forEach(value -> valueByKey.put(value, true));
+        return this;
+    }
+
+    /**
+     * Place flags with value 'false' in the object.
+     *
+     * @param falseFlags List of flag names
+     * @return This object.
+     */
+    public Flags addAllFalse(Collection<String> falseFlags) {
+        falseFlags.forEach(value -> valueByKey.put(value, false));
         return this;
     }
 
