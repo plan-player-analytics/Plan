@@ -42,5 +42,5 @@ dependencies {
 }
 
 compileJava {
-    options.release = 21
+    options.release = 25
 }
