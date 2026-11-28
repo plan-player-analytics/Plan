@@ -18,6 +18,7 @@ package com.djrapitops.plan.processing.processors.player;
 
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.processing.CriticalRunnable;
 
@@ -35,13 +36,15 @@ public class PlayerKillProcessor implements CriticalRunnable {
     private final PlayerKill.Victim victim;
     private final ServerIdentifier server;
     private final String weaponName;
+    private final DeathCause deathCause;
     private final long time;
 
-    public PlayerKillProcessor(PlayerKill.Killer killer, PlayerKill.Victim victim, ServerIdentifier server, String weaponName, long time) {
+    public PlayerKillProcessor(PlayerKill.Killer killer, PlayerKill.Victim victim, ServerIdentifier server, String weaponName, DeathCause deathCause, long time) {
         this.killer = killer;
         this.victim = victim;
         this.server = server;
         this.weaponName = weaponName;
+        this.deathCause = deathCause;
         this.time = time;
     }
 
@@ -49,7 +52,7 @@ public class PlayerKillProcessor implements CriticalRunnable {
     public void run() {
         SessionCache.getCachedSession(killer.getUuid())
                 .ifPresent(session -> session.addPlayerKill(
-                        new PlayerKill(killer, victim, server, weaponName, time)
+                        new PlayerKill(killer, victim, server, weaponName, deathCause, time)
                 ));
     }
 }

@@ -27,11 +27,21 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public record PlayerKill(Killer killer, Victim victim, String weapon, long date,
+public record PlayerKill(Killer killer, Victim victim, String weapon, DeathCause deathCause, long date,
                          ServerIdentifier server) implements DateHolder {
 
+    public PlayerKill {
+        if (deathCause == null) {
+            deathCause = DeathCause.UNKNOWN;
+        }
+    }
+
+    public PlayerKill(Killer killer, Victim victim, ServerIdentifier server, String weapon, DeathCause deathCause, long date) {
+        this(killer, victim, weapon, deathCause, date, server);
+    }
+
     public PlayerKill(Killer killer, Victim victim, ServerIdentifier server, String weapon, long date) {
-        this(killer, victim, weapon, date, server);
+        this(killer, victim, weapon, DeathCause.UNKNOWN, date, server);
     }
 
     /**
@@ -51,7 +61,8 @@ public record PlayerKill(Killer killer, Victim victim, String weapon, long date,
                 "victim=" + victim + ", " +
                 "server=" + server + ", " +
                 "date=" + date + ", " +
-                "weapon='" + weapon + "'}";
+                "weapon='" + weapon + "', " +
+                "deathCause=" + deathCause + '}';
     }
 
     public boolean isSelfKill() {
@@ -67,6 +78,7 @@ public record PlayerKill(Killer killer, Victim victim, String weapon, long date,
                 "  \"victim\": " + victim.toJson() + "," +
                 "  \"server\": " + server.toJson() + "," +
                 "  \"weapon\": \"" + weapon + "\"," +
+                "  \"deathCause\": \"" + deathCause.name() + "\"," +
                 "  \"date\": " + date +
                 "}";
     }

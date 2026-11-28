@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.ChangeUserUUID
 import com.djrapitops.plan.storage.database.transactions.commands.CombineUserTransactionTest;
 import com.djrapitops.plan.storage.database.transactions.patches.AfterBadJoinAddressDataCorrectionPatchTest;
 import com.djrapitops.plan.storage.database.transactions.patches.BadJoinAddressDataCorrectionPatchTest;
+import com.djrapitops.plan.storage.database.transactions.patches.KillsDeathCausePatchTest;
 
 public interface DatabaseTestAggregate extends
         ActivityIndexQueriesTest,
@@ -50,6 +51,7 @@ public interface DatabaseTestAggregate extends
         ExtensionQueryResultTableDataQueryTest,
         BadJoinAddressDataCorrectionPatchTest,
         AfterBadJoinAddressDataCorrectionPatchTest,
+        KillsDeathCausePatchTest,
         PlayerRetentionQueriesTest,
         PluginMetadataQueriesTest,
         PlayerCountQueriesTest {

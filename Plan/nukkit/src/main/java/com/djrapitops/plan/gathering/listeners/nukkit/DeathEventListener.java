@@ -33,6 +33,7 @@ import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -85,8 +86,7 @@ public class DeathEventListener implements Listener {
             }
             Player killer = foundKiller.get();
 
-            processing.submitCritical(new PlayerKillProcessor(getKiller(killer), getVictim(dead), serverInfo.getServerIdentifier(), findWeapon(dead), time));
-        } catch (Exception e) {
+            processing.submitCritical(new PlayerKillProcessor(getKiller(killer), getVictim(dead), serverInfo.getServerIdentifier(), findWeapon(dead), findDeathCause(dead), time));        } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
     }
@@ -140,6 +140,26 @@ public class DeathEventListener implements Listener {
 
         // EntityProjectile, EntityEndCrystal and all other causes that are not known yet
         return new EntityNameFormatter().apply(killer.getName());
+    }
+
+    public DeathCause findDeathCause(Entity dead) {
+        EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+        if (entityDamageEvent == null) return DeathCause.UNKNOWN;
+
+        EntityDamageEvent.DamageCause cause = entityDamageEvent.getCause();
+        if (cause == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION
+                || cause == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+            return DeathCause.EXPLOSION;
+        }
+        if (cause == EntityDamageEvent.DamageCause.THORNS) return DeathCause.OTHER;
+
+        if (!(entityDamageEvent instanceof EntityDamageByEntityEvent byEntity)) return DeathCause.OTHER;
+        Entity killer = byEntity.getDamager();
+        if (killer instanceof Player) return DeathCause.MELEE;
+        if (killer instanceof EntityTameable) return DeathCause.PET;
+        if (killer instanceof EntityProjectile) return DeathCause.PROJECTILE;
+        if (killer instanceof EntityEndCrystal) return DeathCause.EXPLOSION;
+        return DeathCause.OTHER;
     }
 
     private String getPetType(Entity tameable) {

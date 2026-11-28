@@ -22,6 +22,7 @@ import com.djrapitops.plan.gathering.cache.ExplosionCache;
 import com.djrapitops.plan.gathering.cache.ExplosionMetadata;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -128,7 +129,7 @@ public class DeathEventListener implements FabricListener {
                 ServerPlayer player = foundKiller.get();
 
                 Runnable processor = victim instanceof ServerPlayer
-                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayer) victim), serverInfo.getServerIdentifier(), findWeapon(directCause, victim), time)
+                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayer) victim), serverInfo.getServerIdentifier(), findWeapon(directCause, victim), findDeathCause(directCause, damageSource), time)
                         : new MobKillProcessor(player.getUUID());
                 processing.submitCritical(processor);
             } catch (Exception | NoSuchMethodError e) {
@@ -185,6 +186,25 @@ public class DeathEventListener implements FabricListener {
         if (killer == null) return getBlockExplosionKiller(victim, damageSource);
 
         return Optional.empty();
+    }
+
+    public DeathCause findDeathCause(Entity killer, DamageSource damageSource) {
+        if (damageSource != null) {
+            if (damageSource.is(DamageTypes.BAD_RESPAWN_POINT)
+                    || damageSource.is(DamageTypes.EXPLOSION)
+                    || damageSource.is(DamageTypes.PLAYER_EXPLOSION)) {
+                return DeathCause.EXPLOSION;
+            }
+            if (damageSource.is(DamageTypes.THORNS)) {
+                return DeathCause.OTHER;
+            }
+        }
+        if (killer == null) return DeathCause.OTHER;
+        if (killer instanceof ServerPlayer) return DeathCause.MELEE;
+        if (killer instanceof TamableAnimal) return DeathCause.PET;
+        if (killer instanceof Projectile) return DeathCause.PROJECTILE;
+        if (killer instanceof PrimedTnt) return DeathCause.EXPLOSION;
+        return DeathCause.OTHER;
     }
 
     public String findWeapon(Entity killer, LivingEntity victim) {
