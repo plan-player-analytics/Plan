@@ -250,6 +250,7 @@ public final class ExtensionExtractor {
 
         validateReturnType(method, Flags.class);
         validateMethodArguments(method, false, UUID.class, String.class);
+        validateMethodAnnotationPropertyLength(annotation.text(), "text", 50, method);
     }
 
     private void validateMethod(ExtensionMethod extensionMethod, GroupProvider annotation) {
