@@ -3,6 +3,7 @@ import Accordion from './Accordion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 type ErrorLog = {
     fileName: string;
@@ -31,23 +32,27 @@ const ErrorBody = ({ error }: ErrorProps) => {
 };
 
 const ErrorHeader = ({ error }: ErrorProps) => {
+    const { t } = useTranslation();
     return (
         <>
             <td>{error.fileName}</td>
             <td>
-                {error.contents.length ? error.contents[0] : '{Empty file}'}
+                {error.contents.length
+                    ? error.contents[0]
+                    : t('html.label.emptyFile')}
             </td>
         </>
     );
 };
 
 const ErrorsAccordion = ({ errors }: Props) => {
+    const { t } = useTranslation();
     const headers = [
         <>
-            <FontAwesomeIcon icon={faBug} /> Logfile
+            <FontAwesomeIcon icon={faBug} /> {t('html.label.logfile')}
         </>,
         <>
-            <FontAwesomeIcon icon={faClock} /> Occurrences
+            <FontAwesomeIcon icon={faClock} /> {t('html.label.occurrences')}
         </>,
     ];
     const slices = errors
