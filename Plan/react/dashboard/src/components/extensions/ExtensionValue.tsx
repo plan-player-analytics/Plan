@@ -9,6 +9,7 @@ import FormattedDate from '../text/FormattedDate';
 import React, { PropsWithChildren } from 'react';
 import { ExtensionValue as DataType } from '../../dataHooks/model/extension/ExtensionData';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { ExtensionBoolean } from './ExtensionBoolean';
 
 type Props = {
     data: DataType;
@@ -70,7 +71,7 @@ const Value = ({ data }: Props) => {
                 />
             );
         case 'BOOLEAN':
-            return t(data.value ? 'plugin.generic.yes' : 'plugin.generic.no');
+            return <ExtensionBoolean value={data.value} />;
         case 'TIME_MILLISECONDS':
             return <FormattedTime timeMs={data.value} />;
         case 'DATE_YEAR':

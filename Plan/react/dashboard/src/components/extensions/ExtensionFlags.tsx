@@ -1,15 +1,9 @@
 import { ExtensionTab } from '../../dataHooks/model/extension/ExtensionData';
 import { Col, Table } from 'react-bootstrap';
 import { CardSection } from '../cards/CardSection';
-import { useTranslation } from 'react-i18next';
 import React from 'react';
 import ExtensionIcon from './ExtensionIcon';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faCircleCheck,
-    faCircleQuestion,
-    faCircleXmark,
-} from '@fortawesome/free-regular-svg-icons';
+import { ExtensionBoolean } from './ExtensionBoolean';
 
 const flagValueOrder = (value: boolean | null) => {
     if (value === true) return 0;
@@ -24,8 +18,6 @@ type Props = {
 };
 
 export const ExtensionFlags = ({ uuid, tab, width }: Props) => {
-    const { t } = useTranslation();
-
     return (
         <>
             {tab.flagsData.map((flags) => (
@@ -77,32 +69,9 @@ export const ExtensionFlags = ({ uuid, tab, width }: Props) => {
                                         <tr key={name}>
                                             <td>{name}</td>
                                             <td>
-                                                <FontAwesomeIcon
-                                                    icon={
-                                                        value === true
-                                                            ? faCircleCheck
-                                                            : value === false
-                                                              ? faCircleXmark
-                                                              : faCircleQuestion
-                                                    }
-                                                    className={
-                                                        value === true
-                                                            ? 'me-1 col-plugin-green'
-                                                            : value === false
-                                                              ? 'me-1 col-plugin-red'
-                                                              : 'me-1 col-plugin-grey'
-                                                    }
-                                                    aria-hidden='true'
+                                                <ExtensionBoolean
+                                                    value={value}
                                                 />
-                                                {value === null
-                                                    ? t(
-                                                          'plugin.generic.unknown',
-                                                      )
-                                                    : t(
-                                                          value
-                                                              ? 'plugin.generic.yes'
-                                                              : 'plugin.generic.no',
-                                                      )}
                                             </td>
                                         </tr>
                                     ))}
